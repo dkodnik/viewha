@@ -1,0 +1,326 @@
+html {
+  overflow: hidden;
+  height: 100%;
+}
+body { 
+  background: #1f1f1f;
+  font-size: 13px;
+  color: #eee;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  margin: 0 0 0 10px;
+}
+small {
+  font-size: 85%;
+}
+h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
+  font-weight: normal;
+  line-height: 1;
+  color: #999999;
+}
+h1 small {
+  font-size: 70%;
+}
+
+.container { margin: 0 auto; }
+
+fieldset{
+    border:none;
+}
+
+/* Frame */
+.frame {
+/*height: 250px;
+line-height: 250px;*/
+overflow: hidden;
+}
+.frame ul {
+list-style: none;
+margin: 80px 0 0 0; /*margin: 0;*/
+padding: 0;
+height: 100%;
+/*font-size: 50px;*/
+}
+.frame ul li {
+float: left;
+/*width: 227px;*/
+height: 100%;
+margin: 0 30px 30px 0;
+padding: 0;
+/*background: #333;*/
+color: #ddd;
+/*text-align: center;*/
+cursor: pointer;
+}
+.frame ul li.active {
+color: #fff;
+/*background: #a03232;*/
+}
+
+
+/**
+*
+*
+**/
+
+.pageContainer {
+  /**/
+}
+
+#page{
+    height: 100%;
+    overflow-x: hidden;
+}
+
+#resultsDiv{
+    /*height: 100%;
+    overflow-x: hidden;*/
+}
+
+#searchForm{    
+    z-index: 2000;
+}
+
+#searchForm.cn {
+    margin: auto;
+    max-width: 600px;
+    position: relative;
+    top: 35%;
+}
+
+#searchForm.fix {
+    position: fixed;
+    top:10px;
+}
+
+#searchForm.fix input {
+    -webkit-box-shadow: 0px 0px 15px #fff;
+    -moz-box-shadow: 0px 0px 15px #fff;
+    box-shadow: 0px 0px 15px #fff;
+}
+
+#clearButton {
+    display:none;
+    float: left;
+    background-color: #fff;
+    color: #999;
+    height: 19px;
+    padding: 8px 2px;
+    font-size:20px;
+    margin: 0;
+    border: 1px solid #aaa;
+    border-left: none;
+    border-right: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 15px #fff;
+}
+
+#submitButton {
+    
+    margin: 0;
+    float: left;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #006dcc;
+  *background-color: #0044cc;
+  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
+  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
+  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+  background-repeat: repeat-x;
+  border-color: #0044cc #0044cc #002a80;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+  display: inline-block;
+padding: 4px 12px;
+margin-bottom: 0;
+font-size: 40px;
+line-height: 27px;
+height: 37px;
+cursor:pointer;
+
+-webkit-border-radius: 0 4px 4px 0;
+-moz-border-radius: 0 4px 4px 0;
+border-radius: 0 4px 4px 0;
+
+border: 1px solid #aaa;
+border-left: none;
+}
+
+#s{
+    /* The search text box. */
+    
+    color:#555;    
+    
+    border: 1px solid #aaa;
+    border-right: none;
+    -webkit-border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    border-radius: 4px 0 0 4px;
+    
+    float:left;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:20px;
+    height:35px;
+    line-height:35px;
+    /*margin-right:12px;*/
+    outline:medium none;
+    padding:0 0 0 15px;
+    width:500px;
+}
+
+/* Web & news results */
+
+
+.webResult{ /*text-shadow:1px 1px 0 #586a75;*/margin-bottom:50px;}
+.webResult h2{
+    font-size:18px;
+    font-weight:normal;
+}
+.webResult h2 b{ color:#fff; }
+.webResult h2 a{ color:#eee;border:none;}
+.webResult p{ line-height:1.5;/*padding:15px 20px;*/}
+.webResult p b{ color:white;}
+.webResult > a{ margin-left:20px;}
+.webResult img{
+    width: 400px;
+    height: 300px;
+    background-color:#000;
+}
+
+.webResult .infSrc {
+  margin: 0 0 3px 0;
+  width:370px;
+  position:absolute;
+  right:0;
+  bottom:0;
+  left:0;
+  padding:15px;
+  background:#333;
+  background:rgba(0, 0, 0, 0.75);
+  line-height:1;
+}
+
+
+/* Image & video search results */
+
+
+.imageResult{
+    float:left;
+    height:180px;
+    margin:0 0 20px 40px;
+    text-align:center;
+    width:152px;
+    overflow:hidden;
+}
+.imageResult img{ display:block;border:none;}
+.imageResult a.pic{
+    border:1px solid #fff;
+    outline:1px solid #777;
+    display:block;
+    margin:0 auto 15px;
+}
+
+/* The show more button */
+
+p.credit{
+    margin:20px 0;
+    text-align:center;
+}
+
+p.credit a{
+    background-color:#4B5A64;
+    border:1px solid;
+    border-color:#3D4D57 #788E9B #788E9B #3D4D57;
+    color:#c0d0d8;
+    font-size:10px;
+    padding:4px 8px;
+    text-shadow:1px 1px 0 #38464F;
+}
+
+p.credit a:hover{
+    background-color:#38464f;
+    border-color:#38464f #788E9B #788E9B #38464f;
+}
+
+a, a:visited {
+    text-decoration:none;
+    outline:none;
+    border-bottom:1px dotted #97cae6;
+    color:#97cae6;
+}
+
+a:hover{
+    border-bottom:1px dashed transparent;
+}
+
+.clear{
+    clear:both;
+}
+
+
+.endless_scroll_loader {
+    position: fixed;
+top: 30px;
+right: 20px;
+}
+
+
+@media (max-width: 399px) {
+      #s{
+         width: 200px;
+      }
+}
+
+@media (min-width: 400px) and  (max-width: 479px) {
+      #s{
+         width: 300px;
+      }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+      #s{
+         width: 330px;
+      }
+    .webResult img{
+         width: 300px;
+         height: 200px;
+    }
+    .webResult .infSrc {
+          width:270px;
+    }
+}
+@media (min-width: 768px) and (max-width: 979px) {
+      #s{
+         width: 500px;
+      }
+}
+@media (min-width: 980px) {
+    .webResult img{
+         width: 300px;
+         height: 200px;
+    }
+    .webResult .infSrc {
+          width:270px;
+          max-height: 170px;
+          min-height: 100px;
+    }
+}
+@media (min-width: 1200px) {
+    .webResult img{
+         width: 400px;
+         height: 300px;
+    }
+    .webResult .infSrc {
+          width:370px;
+    }
+}
+
+/* hack for Firefox*/
+@-moz-document url-prefix() { 
+  #submitButton {
+    padding-top: 0px;
+    font-size: 27px;
+  }
+}
