@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0029)http://gostinvolgodonsk.ru/1/ -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="Pragma" content="no-cache">
+	<link id="favicon" rel="shortcut icon" href="./favicon.ico" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<title>viewma</title>
 	
 	<link rel="stylesheet" href="./vm.css">
@@ -14,12 +16,16 @@
 <form id="searchForm" method="post" class="cn">
 	<h1 id="logosrch">viewma <small style="display:none;">&#8592; [вьюма]</small></h1>
 		<fieldset>
-           	<input id="s" type="text" placeholder="Сюда введите свой запрос" autofocus="">
-           	<p id="clearButton">&#8855;</p>
+           	<input id="s" type="text" placeholder="Сюда введите свой запрос" autofocus speech="speech" x-webkit-speech="x-webkit-speech" title="Поле ввода запроса для поиска">
+           	<p id="clearButton" title="Удалить поисковый запрос">&#8855;</p>
             
-            <input type="submit" value="&#8250;" id="submitButton">
-            
+            <input type="submit" value="&#8250;" id="submitButton" title="Кнопка поиска">
         </fieldset>
+
+        <div class="help_dir_bottom">
+        	<h2 class="help_left"><p>&#8593; </p><br><small></small></h2>
+        	<h2 class="help_right"><p> &#8593;</p><br><small></small></h2>
+        </div>
     </form>
 
 <div id="page">
