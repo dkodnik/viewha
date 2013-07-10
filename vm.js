@@ -2,17 +2,18 @@ jQuery(function($){
 'use strict';
 (function () {
 
-	var config = {		
-		searchSite	: true,
+	var config = {
 		type		: 'web',
 		append		: false,
 		perPage		: 8,			// A maximum of 8 is allowed by Google
-		page		: 0				// The start page
+		page		: 0,			// The start page
+		siteURL		: ''
 	};
 	var viewTypeData=false; // тип строки поиска для показа с результатом поиска?
 	var timerHelpUsr=0;
 	var helpViewUsr=false; // подсказка показывается пользователю?
 	var srcLineFocus=true; // строка ввода запроса в фокусе? (по умолчанию на #s установлен "autofocus")
+	var sourceResData=false; // результат поиска
 
 	var cursor=0;
 	var sttngs={};
@@ -26,6 +27,13 @@ jQuery(function($){
 		
 		settings = $.extend({},config,settings);
 		settings.term = settings.term || $('#s').val();
+
+		if(settings.siteURL!=''){
+            // Using the Google site:example.com to limit the search to a specific domain:
+            settings.term = 'site:'+settings.siteURL+' '+settings.term;
+        }
+
+        console.log("s="+settings.term);
 
 		sttngs=settings;
 		
@@ -42,6 +50,8 @@ jQuery(function($){
 				
 				// If results were returned, add them to a pageContainer div,
 				// after which append them to the #resultsDiv:
+
+				sourceResData=true;
 
 				var pageContainer;
 
@@ -65,14 +75,32 @@ jQuery(function($){
 				
 				cursor = r.responseData.cursor;
 
+				$('.webResult').find('.srcThisSite').on('click',function(){
+					var el = $(this);
+					var goSiteUrl=el.attr('gourl');
+					console.log("goSiteUrl="+goSiteUrl);
+					goSearch({siteURL:goSiteUrl});
+					return false;
+				});
+
 				$('.webResult').on('click',function(){
 					var el = $(this);
 					window.open(el.attr('gourl'),'_blank'); 
 					return false;
 				});
+
+				$('.webResult').hover(function(){
+					var el = $(this);
+					el.find('.srcThisSite').css('display','block'); 
+					//return false;
+				},function(){
+					var el = $(this);
+					el.find('.srcThisSite').css('display','none'); 
+				});
 			
 			} else {
 				// No results were found for this search.
+				sourceResData=false;
 				resultsDiv.empty();
 				$('<p>',{className:'notFound',html:'No Results Were Found!'}).hide().appendTo(resultsDiv).fadeIn();
 			}
@@ -84,13 +112,15 @@ jQuery(function($){
 
 		var widthObj=400;
 		arr = [
-			'<li class="webResult" style="position:relative;float:left;" gourl="',r.unescapedUrl,'">',
+			'<li class="webResult" gourl="',r.unescapedUrl,'">',
 			//'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.visibleUrl,'">',
 			'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'">',
 			'<div class="infSrc">',
+			'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 			'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 			'<p>',r.content,'</p>',
 			'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
+			'<p class="srcThisSite" gourl="',r.visibleUrl,'" title="искать на этом сайте">','искать тут >','</p>',
 			'</div>',
 			'</li>'
 		];
@@ -101,7 +131,7 @@ jQuery(function($){
 		}
 	}
 
-	function goSearch() {
+	function goSearch(dataSearch) {
 		if($('#s').val()!='') {
 			// clear list
 			$('#resultsDiv').html('');
@@ -111,7 +141,7 @@ jQuery(function($){
 			viewTypeData=true;
 			hideHelp();
 
-			googleSearch();
+			googleSearch(dataSearch);
 		}
 	}
 
@@ -122,6 +152,12 @@ jQuery(function($){
 		$('.help_left small').hide();
 		$('.help_right p').hide();
 		$('.help_right small').hide();
+
+		$('#blackfonscreen').hide();
+		if(viewTypeData) {
+			$('#blackfonscreen').css('z-index','1050');
+			$('#thelist li').css('z-index','1');
+		}
 	}
 
 	setInterval(function(){
@@ -165,7 +201,29 @@ jQuery(function($){
 				}
 			}
 
-		}
+		} /*
+		-----------------------------------------
+		FIXME: прикрыл временно для дебага
+		-----------------------------------------
+		else if(viewTypeData & !helpViewUsr & sourceResData) {
+			timerHelpUsr++;
+
+			// через 40сек. показываем пользователю подсказку №1
+			if(timerHelpUsr>40) {
+				helpViewUsr=true;
+				timerHelpUsr=0;
+
+				$('#blackfonscreen').show();
+			}
+		} else if(viewTypeData & helpViewUsr & sourceResData) {
+			// через 15сек. показываем пользователю подсказку №2
+			if(timerHelpUsr>15) {
+				$('#blackfonscreen').css('z-index','3050');
+				$('#thelist li:first').css('z-index','3060');
+			} else {
+				timerHelpUsr++;
+			}
+		}*/
 	}, 1000); // 1sec
 
 	setTimeout(function(){
@@ -185,16 +243,41 @@ jQuery(function($){
 		hideHelp();
 	});
 
+	$('#s').bind('keyup',function(){
+		hideHelp();
+	});
+
+	$('#page').mouseup(function(){
+		hideHelp();
+	});
+
 	$('#page').scroll(function(){
+		hideHelp();
 		if ($('#page').scrollTop() == $('#resultsDiv').height() - $('#page').height()){
 			if( +cursor.estimatedResultCount > (sttngs.page+1)*sttngs.perPage){
-				googleSearch({append:true,page:sttngs.page+1});
+				googleSearch({append:true,page:sttngs.page+1,siteURL:sttngs.siteURL});
 			}
 		}
 	});
 
+	$('#blackfonscreen').mouseup(function(){
+		hideHelp();
+	});
+
+	$('#blackfonscreen').scroll(function(){
+		hideHelp();
+	});
+
 	$('#searchForm').submit(function(){
-		goSearch();
+		if(sttngs) {
+			if(sttngs.siteURL!='') {
+				goSearch({siteURL:sttngs.siteURL});
+			} else {
+				goSearch();
+			}
+		} else {
+			goSearch();
+		}
 		return false;
 	});
 
@@ -219,7 +302,12 @@ jQuery(function($){
 	
 	if(params.q) {
 		$("#s").val(params.q);
-		goSearch();
+		if(params.site) {
+			$("#leftSrcTrg").html('<img src="http://'+params.site+'/favicon.ico" class="ico" style="margin:2px;">');
+			goSearch({siteURL:params.site});
+		} else {
+			goSearch();
+		}
 	}
 
 
