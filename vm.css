@@ -76,6 +76,11 @@ h2.help_right small {
   display:none;
 }
 
+.notFound {
+  margin-top: 100px;
+  font-size: 40px;
+}
+
 /* Frame */
 .frame {
   /*height: 250px;
@@ -122,12 +127,27 @@ h2.help_right small {
   padding: 8px 2px;
   margin:0;
   border: 1px solid #aaa;
-  border-left: none;
+  border-right: none;
   line-height: 1;
   min-width: 15px;
   -webkit-border-radius: 4px 0 0 4px;
   -moz-border-radius: 4px 0 0 4px;
   border-radius: 4px 0 0 4px;
+}
+
+#leftSrcTrg_ico {
+  opacity: 1;
+}
+
+#leftSrcTrg_close {
+  color: #000;
+  margin: 0;
+  position: absolute;
+  top: 14px;
+  left: 15px;
+  font-size: 22px;
+  display: none;
+  cursor: pointer;
 }
 
 #page{
@@ -261,7 +281,7 @@ h2.help_right small {
   border-radius: 2px;
 }
 
-.webResult img.ico, #leftSrcTrg .ico {
+.webResult img.ico, #leftSrcTrg_ico .ico {
   width:16px;
   height:16px;
   border:none;
@@ -288,20 +308,13 @@ h2.help_right small {
   margin: 0;
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #006dcc;
-  *background-color: #0044cc;
-  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
-  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
-  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
-  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
   background-repeat: repeat-x;
   border-color: #0044cc #0044cc #002a80;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   
-  padding: 4px;
+  padding: 4px 10px;
   cursor:pointer;
 
   -webkit-border-radius: 4px;
@@ -312,6 +325,20 @@ h2.help_right small {
   position: absolute;
   bottom: 10px;
   right: 10px;
+
+  font-size: 40px;
+  line-height: .5;
+  height: 23px;
+  text-align: center;
+}
+.srcThisSite:hover {
+  background-color: #006dcc;
+  *background-color: #0044cc;
+  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
+  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
+  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
 }
 
 

@@ -2,6 +2,10 @@ jQuery(function($){
 'use strict';
 (function () {
 
+	var lang='ru';
+	var lang_def='en';
+	var lang_all=['ru','en'];
+
 	var config = {
 		type		: 'web',
 		append		: false,
@@ -17,7 +21,41 @@ jQuery(function($){
 
 	var cursor=0;
 	var sttngs={};
-	
+
+	var i18n={
+		'ru':{
+			viewma_trn: '&#8592; [вьюма]',
+			cnclSrcSite: 'Отменить поиск по сайту',
+			entrYInqH: 'Сюда введите свой запрос',
+			inpSrcQr: 'Поле ввода запроса для поиска',
+			delSrcQr: 'Удалить поисковый запрос',
+			srcButton: 'Кнопка поиска',
+			notFound: 'Ничего не найдено!',
+			searchThisSite: 'Поиск по сайту:',
+			searchThisSiteM: 'искать на этом сайте',
+			helpSrcYFocusY: 'нажмите клавишу "Enter &#x23ce;" или синюю кнопку со стрелкой ">", для поиска по запросу',
+			helpSrcYFocusN: 'нажмите синюю кнопку со стрелкой ">", для поиска по запросу',
+			helpSrcNFocusY1: '(1) - сформулируйте свой запрос и введите сюда',
+			helpSrcNFocusY2: '(2) - нажмите синюю кнопку со стрелкой ">" для поиска по запросу или клавишу "Enter &#x23ce;"',
+			helpSrcNFocusN: 'нажмите на строку поиска и введите сюда свой запрос'
+		},
+		'en':{
+			viewma_trn: '&#8592; [vjuːma]',
+			cnclSrcSite: 'Cancel Search Site',
+			entrYInqH: 'Enter your inquiry here',
+			inpSrcQr: 'The input field for the search query',
+			delSrcQr: 'To delete a search query',
+			srcButton: 'Search button',
+			notFound: 'No Results Were Found!',
+			searchThisSite: 'Search this site:',
+			searchThisSiteM: 'search this site',
+			helpSrcYFocusY: 'press "Enter &#x23ce;" or the blue arrow button ">" to search for on request',
+			helpSrcYFocusN: 'click the blue arrow button ">" to search for on request',
+			helpSrcNFocusY1: '(1) - specify your request and enter here',
+			helpSrcNFocusY2: '(2) - press the blue arrow button ">" to search for on-demand, or press "Enter &#x23ce;"',
+			helpSrcNFocusN: 'click on the search bar and enter your query here'
+		}
+	};
 	
 	
 	function googleSearch(settings){
@@ -79,6 +117,7 @@ jQuery(function($){
 					var el = $(this);
 					var goSiteUrl=el.attr('gourl');
 					console.log("goSiteUrl="+goSiteUrl);
+					$("#leftSrcTrg_ico").html('<img src="http://'+goSiteUrl+'/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' '+goSiteUrl+'">');
 					goSearch({siteURL:goSiteUrl});
 					return false;
 				});
@@ -91,8 +130,11 @@ jQuery(function($){
 
 				$('.webResult').hover(function(){
 					var el = $(this);
-					el.find('.srcThisSite').css('display','block'); 
-					//return false;
+					if(settings.siteURL==''){
+						// только для всех сайтов, а не определенного
+						el.find('.srcThisSite').css('display','block'); 
+					}
+					
 				},function(){
 					var el = $(this);
 					el.find('.srcThisSite').css('display','none'); 
@@ -102,7 +144,7 @@ jQuery(function($){
 				// No results were found for this search.
 				sourceResData=false;
 				resultsDiv.empty();
-				$('<p>',{className:'notFound',html:'No Results Were Found!'}).hide().appendTo(resultsDiv).fadeIn();
+				$('<p>',{class:'notFound',html:i18n[lang].notFound}).hide().appendTo(resultsDiv).fadeIn();
 			}
 		});
 	}
@@ -120,7 +162,7 @@ jQuery(function($){
 			'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 			'<p>',r.content,'</p>',
 			'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
-			'<p class="srcThisSite" gourl="',r.visibleUrl,'" title="искать на этом сайте">','искать тут >','</p>',
+			'<div class="srcThisSite" gourl="',r.visibleUrl,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
 			'</div>',
 			'</li>'
 		];
@@ -160,6 +202,35 @@ jQuery(function($){
 		}
 	}
 
+	function getLocale() {
+		if (navigator) {
+			if (navigator.language) {
+				return navigator.language;
+			} else if (navigator.browserLanguage) {
+				return navigator.browserLanguage;
+			} else if (navigator.systemLanguage) {
+				return navigator.systemLanguage;
+			} else if (navigator.userLanguage) {
+				return navigator.userLanguage;
+			}
+		}
+	}
+	function lng(yLng) {
+		var now_lang=getLocale().substr(0, 2).toLowerCase();
+		if(yLng) {
+			now_lang=yLng;
+		}
+		var ret_lng=lang_def;
+		for(var i in lang_all){
+			if(lang_all[i]==now_lang) {
+				ret_lng=now_lang;
+			}
+		}
+		return ret_lng;
+	}
+
+	lang=lng();
+
 	setInterval(function(){
 		if(!viewTypeData & !helpViewUsr) {
 			timerHelpUsr++;
@@ -172,12 +243,12 @@ jQuery(function($){
 					// Что-то ввели
 					if(srcLineFocus) {
 						// предлогаем нажать клавишу enter или по синей кнопке со стрелочкой ">"
-						$('.help_right small').html('нажмите клавишу "Enter &#x23ce;" или синию кнопку со стрелкой ">", для поиска по запросу');
+						$('.help_right small').html(i18n[lang].helpSrcYFocusY);
 						$('.help_right p').show("slow");
 						$('.help_right small').show("slow");
 					} else {
 						// предлогаем нажать по синей кнопке со стрелочкой ">"
-						$('.help_right small').html('нажмите синию кнопку со стрелкой ">", для поиска по запросу');
+						$('.help_right small').html(i18n[lang].helpSrcYFocusN);
 						$('.help_right p').show("slow");
 						$('.help_right small').show("slow");
 					}
@@ -185,8 +256,8 @@ jQuery(function($){
 					// Не ввели ни чего
 					if(srcLineFocus) {
 						// предлогаем набрать текст запроса
-						$('.help_left small').html('(1) - сформулируйте свой запрос и введите сюда');
-						$('.help_right small').html('(2) - нажмите синию кнопку со стрелкой ">" для поиска по запросу или клавишу "Enter &#x23ce;"');
+						$('.help_left small').html(i18n[lang].helpSrcNFocusY1);
+						$('.help_right small').html(i18n[lang].helpSrcNFocusY2);
 						$('.help_left p').show("slow");
 						$('.help_left small').show("slow",function(){
 							$('.help_right p').show("slow");
@@ -194,7 +265,7 @@ jQuery(function($){
 						});
 					} else {
 						// предлогаем нажать на строку поиска и набрать текст
-						$('.help_left small').html('нажмите на строку поиска и введите сюда свой запрос');
+						$('.help_left small').html(i18n[lang].helpSrcNFocusN);
 						$('.help_left p').show("slow");
 						$('.help_left small').show("slow");
 					}
@@ -246,6 +317,31 @@ jQuery(function($){
 	$('#s').bind('keyup',function(){
 		hideHelp();
 	});
+
+	
+	$('#leftSrcTrg').hover(function(){
+		var el = $(this);
+		if(sttngs.siteURL!=''){
+			$('#leftSrcTrg_close').css('display','block'); 
+			$('#leftSrcTrg_ico').css('opacity','.4'); 
+		}
+	},function(){
+		var el = $(this);
+		if(sttngs.siteURL!=''){
+			$('#leftSrcTrg_close').css('display','none');
+			$('#leftSrcTrg_ico').css('opacity','1'); 
+		}
+	});
+
+	$('#leftSrcTrg_close').click(function(){
+		if(sttngs.siteURL!=''){
+			$("#leftSrcTrg_ico").html('');
+			$('#leftSrcTrg_close').css('display','none');
+			$('#leftSrcTrg_ico').css('opacity','1');
+			goSearch({siteURL:''});
+		}
+	});
+
 
 	$('#page').mouseup(function(){
 		hideHelp();
@@ -299,11 +395,24 @@ jQuery(function($){
 		var tmparr = prmarr[i].split("=");
 		params[tmparr[0]] = tmparr[1];
 	}
+
+	if(params.l) {
+		lang=lng(params.l);
+	}
+
+	
+	$('#logosrch small').html(i18n[lang].viewma_trn);
+	$('#leftSrcTrg_close').attr('title',i18n[lang].cnclSrcSite);
+	$('#s').attr('placeholder',i18n[lang].entrYInqH);
+	$('#s').attr('title',i18n[lang].inpSrcQr);
+	$('#clearButton').attr('title',i18n[lang].delSrcQr);
+	$('#submitButton').attr('title',i18n[lang].srcButton);
+
 	
 	if(params.q) {
 		$("#s").val(params.q);
 		if(params.site) {
-			$("#leftSrcTrg").html('<img src="http://'+params.site+'/favicon.ico" class="ico" style="margin:2px;">');
+			$("#leftSrcTrg_ico").html('<img src="http://'+params.site+'/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' '+params.site+'">');
 			goSearch({siteURL:params.site});
 		} else {
 			goSearch();
