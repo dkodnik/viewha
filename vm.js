@@ -30,6 +30,7 @@ jQuery(function($){
 			inpSrcQr: 'Поле ввода запроса для поиска',
 			delSrcQr: 'Удалить поисковый запрос',
 			srcButton: 'Кнопка поиска',
+			goViewUp: 'Наверх к первому результату поиска',
 			notFound: 'Ничего не найдено!',
 			searchThisSite: 'Поиск по сайту:',
 			searchThisSiteM: 'искать на этом сайте',
@@ -46,6 +47,7 @@ jQuery(function($){
 			inpSrcQr: 'The input field for the search query',
 			delSrcQr: 'To delete a search query',
 			srcButton: 'Search button',
+			goViewUp: 'Up to the first search result',
 			notFound: 'No Results Were Found!',
 			searchThisSite: 'Search this site:',
 			searchThisSiteM: 'search this site',
@@ -342,6 +344,11 @@ jQuery(function($){
 		}
 	});
 
+	$('#goToUp').click(function(){
+		$('#page').animate({
+          scrollTop: 0
+        }, 800);
+	});
 
 	$('#page').mouseup(function(){
 		hideHelp();
@@ -349,7 +356,13 @@ jQuery(function($){
 
 	$('#page').scroll(function(){
 		hideHelp();
-		if ($('#page').scrollTop() == $('#resultsDiv').height() - $('#page').height()){
+		var scro=$('#page').scrollTop();
+		if(scro>0) {
+			$('#goToUp').show("slow");
+		} else {
+			$('#goToUp').hide();
+		}
+		if (scro == $('#resultsDiv').height() - $('#page').height()){
 			if( +cursor.estimatedResultCount > (sttngs.page+1)*sttngs.perPage){
 				googleSearch({append:true,page:sttngs.page+1,siteURL:sttngs.siteURL});
 			}
@@ -407,6 +420,7 @@ jQuery(function($){
 	$('#s').attr('title',i18n[lang].inpSrcQr);
 	$('#clearButton').attr('title',i18n[lang].delSrcQr);
 	$('#submitButton').attr('title',i18n[lang].srcButton);
+	$('#goToUp').attr('title',i18n[lang].goViewUp);
 
 	
 	if(params.q) {
