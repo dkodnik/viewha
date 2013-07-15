@@ -76,9 +76,13 @@ jQuery(function($){
         console.log("s="+settings.term);
 
 		sttngs=settings;
-		
+
+		var typeGglQ=["web", "images","news","video"];
+
+		for(var istpGQ in typeGglQ) {
+
 		// URL of Google's AJAX search API
-		var apiURL = 'http://ajax.googleapis.com/ajax/services/search/'+settings.type+'?v=1.0&callback=?';
+		var apiURL = 'http://ajax.googleapis.com/ajax/services/search/'+typeGglQ[istpGQ]+'?v=1.0&callback=?';
 		var resultsDiv = $('#resultsDiv');
 		
 		$.getJSON(apiURL,{q:settings.term,rsz:settings.perPage,start:settings.page*settings.perPage},function(r){
@@ -144,36 +148,121 @@ jQuery(function($){
 			
 			} else {
 				// No results were found for this search.
-				sourceResData=false;
+				// FIXME: vvv
+				/*sourceResData=false;
 				resultsDiv.empty();
-				$('<p>',{class:'notFound',html:i18n[lang].notFound}).hide().appendTo(resultsDiv).fadeIn();
+				$('<p>',{class:'notFound',html:i18n[lang].notFound}).hide().appendTo(resultsDiv).fadeIn();*/
 			}
 		});
+		}
 	}
 	
 	function result(r){
 		var arr = [];
 
 		var widthObj=400;
-		arr = [
-			'<li class="webResult" gourl="',r.unescapedUrl,'">',
-			//'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.visibleUrl,'">',
-			'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'">',
-			'<div class="infSrc">',
-			'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
-			'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
-			'<p>',r.content,'</p>',
-			'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
-			'<div class="srcThisSite" gourl="',r.visibleUrl,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
-			'</div>',
-			'</li>'
-		];
+
+		// GsearchResultClass is passed by the google API
+		switch(r.GsearchResultClass){
+			case 'GwebSearch':
+				arr = [
+					'<li class="webResult" gourl="',r.unescapedUrl,'">',
+					//'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.visibleUrl,'">',
+					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'">',
+					'<div class="infSrc">',
+					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
+					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
+					'<p>',r.content,'</p>',
+					'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
+					'<div class="srcThisSite" gourl="',r.visibleUrl,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'</div>',
+					'</li>'
+				];
+				break;
+			case 'GimageSearch':
+				arr = [
+					'<li class="webResult" gourl="',r.unescapedUrl,'">',
+					//'<img src="',r.tbUrl,'" width="',r.tbWidth,'px" height="',r.tbHeight,'px" />',
+					'<img src="',r.unescapedUrl,'" />',
+					'<div class="infSrc">',
+					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
+					'<p>',r.titleNoFormatting,'</p>',
+					'<a href="',r.originalContextUrl,'" target="_blank">',r.visibleUrl,'</a>',
+					'<div class="srcThisSite" gourl="',r.visibleUrl,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'</div>',
+					'</li>'
+				];
+				break;
+			case 'GvideoSearch':
+				var imgHtml='';
+				if(r.videoType=='YouTube') {
+					var prmarr = r.url.split ("?");
+					var params = {};
+					for ( var i = 0; i < prmarr.length; i++) {
+						var tmparr = prmarr[i].split("=");
+						params[tmparr[0]] = tmparr[1];
+					}
+					console.log(prmarr);
+					console.log(params);
+					//
+					imgHtml='<img src="http://img.youtube.com/vi/'+params.v+'/hqdefault.jpg" />';
+				} else {
+					imgHtml='<img src="'+r.tbUrl+'" width="100%" />';
+				}
+				arr = [
+					'<li class="webResult" gourl="',r.url,'">',
+					imgHtml,
+					'<div class="infSrc">',
+					'<img src="http://',r.publisher,'/favicon.ico" class="ico">',
+					'<h2>',r.videoType,'</h2>',
+					'<p>',r.titleNoFormatting,'</p>',
+					'<a href="',r.originalContextUrl,'" target="_blank">',r.publisher,'</a>',
+					'<div class="srcThisSite" gourl="',r.publisher,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'</div>',
+					'</li>'
+				];
+				break;
+			case 'GnewsSearch':
+				var hostU=parseURL(r.unescapedUrl).host;
+				arr = [
+					'<li class="webResult" gourl="',r.unescapedUrl,'">',
+					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'">',
+					'<div class="infSrc">',
+					'<img src="http://',hostU,'/favicon.ico" class="ico">',
+					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
+					'<p>',r.content,'</p>',
+					'<a href="',r.unescapedUrl,'" target="_blank">',r.publisher,'</a>',
+					'<div class="srcThisSite" gourl="',hostU,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'</div>',
+					'</li>'
+				];
+				break;
+		}
 		
 		// The toString method.
 		this.toString = function(){
 			return arr.join('');
 		}
 	}
+
+	function parseURL(url) {
+		var ths={};
+        url = url || ths.href;
+        var pattern = "^(([^:/\\?#]+):)?(//(([^:/\\?#]*)(?::([^/\\?#]*))?))?([^\\?#]*)(\\?([^#]*))?(#(.*))?$";
+        var rx = new RegExp(pattern); 
+        var parts = rx.exec(url);
+        
+        ths.href = parts[0] || "";
+        ths.protocol = parts[1] || "";
+        ths.host = parts[4] || "";
+        ths.hostname = parts[5] || "";
+        ths.port = parts[6] || "";
+        ths.pathname = parts[7] || "/";
+        ths.search = parts[8] || "";
+        ths.hash = parts[10] || "";
+        
+        return ths;
+    }
 
 	function goSearch(dataSearch) {
 		if($('#s').val()!='') {
