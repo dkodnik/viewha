@@ -140,10 +140,28 @@ jQuery(function($){
 						// только для всех сайтов, а не определенного
 						el.find('.srcThisSite').css('display','block'); 
 					}
+
+					// zoomer - on					
+					var idST=setTimeout(function(){
+						el.css('z-index','10');
+						el.find('.cntnt').removeClass('zoom').addClass('zoom');
+					}, 5000); // 5sec
+					el.attr('timeZoom',idST);
+					
 					
 				},function(){
 					var el = $(this);
-					el.find('.srcThisSite').css('display','none'); 
+					// zoomer - off
+					if(el.attr('timeZoom')!=0) {
+						clearTimeout(el.attr('timeZoom'));
+						el.attr('timeZoom',0);
+					}
+					if( el.find('.cntnt').hasClass('zoom') ) {
+						el.css('z-index','1');
+						el.find('.cntnt').removeClass('zoom');
+					}
+					
+					el.find('.srcThisSite').css('display','none');
 				});
 			
 			} else {
@@ -167,8 +185,9 @@ jQuery(function($){
 			case 'GwebSearch':
 				arr = [
 					'<li class="webResult" gourl="',r.unescapedUrl,'">',
+					'<div class="cntnt">',
 					//'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.visibleUrl,'">',
-					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'">',
+					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
@@ -176,19 +195,22 @@ jQuery(function($){
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
 					'<div class="srcThisSite" gourl="',r.visibleUrl,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
 					'</div>',
+					'</div>',
 					'</li>'
 				];
 				break;
 			case 'GimageSearch':
 				arr = [
 					'<li class="webResult" gourl="',r.unescapedUrl,'">',
+					'<div class="cntnt">',
 					//'<img src="',r.tbUrl,'" width="',r.tbWidth,'px" height="',r.tbHeight,'px" />',
-					'<img src="',r.unescapedUrl,'" />',
+					'<img src="',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.visibleUrl,'</a>',
 					'<div class="srcThisSite" gourl="',r.visibleUrl,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'</div>',
 					'</div>',
 					'</li>'
 				];
@@ -202,15 +224,13 @@ jQuery(function($){
 						var tmparr = prmarr[i].split("=");
 						params[tmparr[0]] = tmparr[1];
 					}
-					console.log(prmarr);
-					console.log(params);
-					//
-					imgHtml='<img src="http://img.youtube.com/vi/'+params.v+'/hqdefault.jpg" />';
+					imgHtml='<img src="http://img.youtube.com/vi/'+params.v+'/hqdefault.jpg" class="img" />';
 				} else {
-					imgHtml='<img src="'+r.tbUrl+'" width="100%" />';
+					imgHtml='<img src="'+r.tbUrl+'" width="100%" class="img" />';
 				}
 				arr = [
 					'<li class="webResult" gourl="',r.url,'">',
+					'<div class="cntnt">',
 					imgHtml,
 					'<div class="infSrc">',
 					'<img src="http://',r.publisher,'/favicon.ico" class="ico">',
@@ -219,6 +239,7 @@ jQuery(function($){
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.publisher,'</a>',
 					'<div class="srcThisSite" gourl="',r.publisher,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
 					'</div>',
+					'</div>',
 					'</li>'
 				];
 				break;
@@ -226,13 +247,15 @@ jQuery(function($){
 				var hostU=parseURL(r.unescapedUrl).host;
 				arr = [
 					'<li class="webResult" gourl="',r.unescapedUrl,'">',
-					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'">',
+					'<div class="cntnt">',
+					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
 					'<img src="http://',hostU,'/favicon.ico" class="ico">',
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.publisher,'</a>',
 					'<div class="srcThisSite" gourl="',hostU,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'</div>',
 					'</div>',
 					'</li>'
 				];

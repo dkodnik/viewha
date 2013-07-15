@@ -104,10 +104,34 @@ h2.help_right small {
   color: #ddd;
   /*text-align: center;*/
   cursor: pointer;
+  position: relative;
+  width: 400px;
+  height: 303px;
 }
 .frame ul li.active {
   color: #fff;
   /*background: #a03232;*/
+}
+
+.cntnt.zoom {
+  margin-top: -60%;
+  margin-left: -75%;
+  width: 150%;
+  height: 150%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  -o-transition: all .5s ease;
+  -webkit-transition: all .5s ease;
+}
+.cntnt.zoom .img{
+  width: 100%;
+  height: 100%;
+}
+.cntnt.zoom .infSrc{
+  width:570px;
 }
 
 
@@ -425,12 +449,15 @@ a:hover{
   #s{
     width: 330px;
   }
-  .webResult img{
+  .frame ul li, .webResult img{
     width: 300px;
     height: 200px;
   }
   .webResult .infSrc {
     width:270px;
+  }
+  .cntnt.zoom .infSrc {
+    width: 420px;
   }
 }
 @media (min-width: 768px) and (max-width: 979px) {
@@ -439,7 +466,7 @@ a:hover{
   }
 }
 @media (min-width: 980px) {
-  .webResult img{
+  .frame ul li, .webResult img{
     width: 300px;
     height: 200px;
   }
@@ -447,6 +474,9 @@ a:hover{
     width:270px;
     max-height: 170px;
     min-height: 100px;
+  }
+  .cntnt.zoom .infSrc {
+    width: 420px;
   }
 }
 @media (min-width: 1200px) {
