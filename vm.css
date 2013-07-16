@@ -315,7 +315,7 @@ h2.help_right small {
 }
 
 .webResult .infSrc {
-  margin: 0 0 3px 0;
+  margin: 0;
   width:370px;
   position:absolute;
   right:0;
@@ -480,12 +480,15 @@ a:hover{
   }
 }
 @media (min-width: 1200px) {
-  .webResult img{
+  .frame ul li, .webResult img{
     width: 400px;
     height: 300px;
   }
   .webResult .infSrc {
     width:370px;
+  }
+  .cntnt.zoom .infSrc {
+    width: 570px;
   }
 }
 

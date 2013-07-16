@@ -145,7 +145,7 @@ jQuery(function($){
 					var idST=setTimeout(function(){
 						el.css('z-index','10');
 						el.find('.cntnt').removeClass('zoom').addClass('zoom');
-					}, 5000); // 5sec
+					}, 3000); // 3sec
 					el.attr('timeZoom',idST);
 					
 					
