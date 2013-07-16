@@ -114,7 +114,7 @@ h2.help_right small {
 }
 
 .cntnt.zoom {
-  margin-top: -60%;
+  margin-top: -50%;
   margin-left: -75%;
   width: 150%;
   height: 150%;
@@ -279,6 +279,33 @@ h2.help_right small {
   width:500px;
 }
 
+.autocompl {
+  width: 550px;
+  font-size: 10px;
+  position: absolute;
+  padding: 5px;
+  background-color: #333;
+  z-index: 200;
+  margin: 0 10px;
+  border-radius: 4px;
+  opacity: 0.95;
+  display: none;
+}
+#hlpCompl {
+  list-style: none;
+  height: 100%;
+  padding: 0 10px;
+}
+#hlpCompl li{
+  font-size: 16px;
+  padding: 2px 0;
+  cursor: pointer;
+}
+#hlpCompl li:hover{
+  background-color: #ccc;
+  color: #222;
+}
+
 /* Web & news results */
 
 
@@ -350,7 +377,7 @@ h2.help_right small {
   bottom: 10px;
   right: 10px;
 
-  font-size: 40px;
+  font-size: 32px;
   line-height: .5;
   height: 23px;
   text-align: center;
@@ -433,16 +460,26 @@ a:hover{
   display:none;
 }
 
+font.fs15{
+  font-size:15px;
+}
+
 
 @media (max-width: 399px) {
   #s{
     width: 200px;
+  }
+  .autocompl {
+    width: 250px;
   }
 }
 
 @media (min-width: 400px) and  (max-width: 479px) {
   #s{
     width: 300px;
+  }
+  .autocompl {
+    width: 350px;
   }
 }
 @media (min-width: 480px) and (max-width: 767px) {
@@ -458,6 +495,9 @@ a:hover{
   }
   .cntnt.zoom .infSrc {
     width: 420px;
+  }
+  .autocompl {
+    width: 380px;
   }
 }
 @media (min-width: 768px) and (max-width: 979px) {

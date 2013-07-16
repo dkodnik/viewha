@@ -121,12 +121,16 @@ jQuery(function($){
 
 				$('.webResult').find('.srcThisSite').on('click',function(){
 					var el = $(this);
+					//el.tipsy({live:true,html:true, gravity:'se', delayIn:700, delayOut:200});
 					var goSiteUrl=el.attr('gourl');
 					console.log("goSiteUrl="+goSiteUrl);
 					$("#leftSrcTrg_ico").html('<img src="http://'+goSiteUrl+'/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' '+goSiteUrl+'">');
 					goSearch({siteURL:goSiteUrl});
 					return false;
 				});
+
+				$('.webResult').find('.srcThisSite').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
+
 
 				$('.webResult').on('click',function(){
 					var el = $(this);
@@ -155,11 +159,14 @@ jQuery(function($){
 					if(el.attr('timeZoom')!=0) {
 						clearTimeout(el.attr('timeZoom'));
 						el.attr('timeZoom',0);
-					}
-					if( el.find('.cntnt').hasClass('zoom') ) {
+
 						el.css('z-index','1');
 						el.find('.cntnt').removeClass('zoom');
 					}
+					/*if( el.find('.cntnt').hasClass('zoom') ) {
+						el.css('z-index','1');
+						el.find('.cntnt').removeClass('zoom');
+					}*/
 					
 					el.find('.srcThisSite').css('display','none');
 				});
@@ -193,7 +200,7 @@ jQuery(function($){
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
-					'<div class="srcThisSite" gourl="',r.visibleUrl,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
 					'</li>'
@@ -209,7 +216,7 @@ jQuery(function($){
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.visibleUrl,'</a>',
-					'<div class="srcThisSite" gourl="',r.visibleUrl,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
 					'</li>'
@@ -237,7 +244,7 @@ jQuery(function($){
 					'<h2>',r.videoType,'</h2>',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.publisher,'</a>',
-					'<div class="srcThisSite" gourl="',r.publisher,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'<div class="srcThisSite" gourl="',r.publisher,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
 					'</li>'
@@ -254,7 +261,7 @@ jQuery(function($){
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.publisher,'</a>',
-					'<div class="srcThisSite" gourl="',hostU,'" title="',i18n[lang].searchThisSiteM,'">','&#8250;','</div>',
+					'<div class="srcThisSite" gourl="',hostU,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
 					'</li>'
@@ -355,6 +362,7 @@ jQuery(function($){
 				timerHelpUsr=0;
 				if($('#s').val()!='') {
 					// Что-то ввели
+					$('.autocompl').hide('slow');
 					if(srcLineFocus) {
 						// предлогаем нажать клавишу enter или по синей кнопке со стрелочкой ">"
 						$('.help_right small').html(i18n[lang].helpSrcYFocusY);
@@ -415,8 +423,43 @@ jQuery(function($){
 		$('#logosrch small').show("slow");
 	}, 5000); // 5sec
 
-	$('#s').bind('keyup',function(){
+	$('#s').bind('keyup',function(e){
+		var code = e.which;
+		
 		hideHelp();
+		
+		// code: 13-enter, 27-escape
+		if(code!=13 & code!=27) {
+		// Autocomplete Google
+		if($('#s').val().length>0) {
+			// http://api.bing.com/osjson.aspx?query=
+			$.ajax({
+				type: 'GET',
+				url: 'http://google.com/complete/search',
+				crossDomain: true,
+				dataType: 'jsonp',
+				data: {
+					output: 'firefox',
+					hl: lang,
+					q: $('#s').val()
+				},
+				success: function(obj) {
+					if(obj[1] && obj[1].length>0) {
+						$('.autocompl').show();
+						$('#hlpCompl').empty();
+						for(var i in obj[1]) {
+							$('#hlpCompl').append('<li class="hlpCompStr">'+(obj[1][i])+'</li>');
+						}
+						$('.hlpCompStr').on('click',function(){
+							var el = $(this);
+							$('#s').val(el.text());
+							$('.autocompl').hide();
+							return false;
+						});
+					}
+				}
+			});
+		}}
 	});
 
 	$('#s').focus(function(){
@@ -435,13 +478,13 @@ jQuery(function($){
 	
 	$('#leftSrcTrg').hover(function(){
 		var el = $(this);
-		if(sttngs.siteURL!=''){
+		if(sttngs.siteURL && sttngs.siteURL!='') {
 			$('#leftSrcTrg_close').css('display','block'); 
 			$('#leftSrcTrg_ico').css('opacity','.4'); 
 		}
 	},function(){
 		var el = $(this);
-		if(sttngs.siteURL!=''){
+		if(sttngs.siteURL && sttngs.siteURL!='') {
 			$('#leftSrcTrg_close').css('display','none');
 			$('#leftSrcTrg_ico').css('opacity','1'); 
 		}
@@ -490,6 +533,7 @@ jQuery(function($){
 	});
 
 	$('#searchForm').submit(function(){
+		$('.autocompl').hide();
 		if(sttngs) {
 			if(sttngs.siteURL!='') {
 				goSearch({siteURL:sttngs.siteURL});
@@ -509,6 +553,7 @@ jQuery(function($){
 		$("#logosrch").css('display','block');
 		$('#searchForm').removeClass('cn fix').addClass('cn');
 		viewTypeData=false;
+		$('.autocompl').hide();
 	});
 
 	// parse url path..
@@ -527,13 +572,22 @@ jQuery(function($){
 
 	
 	$('#logosrch small').html(i18n[lang].viewma_trn);
-	$('#leftSrcTrg_close').attr('title',i18n[lang].cnclSrcSite);
 	$('#s').attr('placeholder',i18n[lang].entrYInqH);
-	$('#s').attr('title',i18n[lang].inpSrcQr);
-	$('#clearButton').attr('title',i18n[lang].delSrcQr);
-	$('#submitButton').attr('title',i18n[lang].srcButton);
-	$('#goToUp').attr('title',i18n[lang].goViewUp);
 
+	$('#s').attr('original-title','<font class="fs15">'+i18n[lang].inpSrcQr+'</font>');
+	$('#s').tipsy({html:true, gravity:'n', delayIn:700, delayOut:200});
+
+	$('#leftSrcTrg_close').attr('original-title','<font class="fs15">'+i18n[lang].cnclSrcSite+'</font>');
+	$('#leftSrcTrg_close').tipsy({html:true, gravity:'nw', delayIn:700, delayOut:200});
+
+	$('#clearButton').attr('original-title','<font class="fs15">'+i18n[lang].delSrcQr+'</font>');
+	$('#clearButton').tipsy({html:true, gravity:'ne', delayIn:700, delayOut:200});
+
+	$('#submitButton').attr('original-title','<font class="fs15">'+i18n[lang].srcButton+'</font>');
+	$('#submitButton').tipsy({html:true, gravity:'ne', delayIn:700, delayOut:200});
+
+	$('#goToUp').attr('original-title','<font class="fs15">'+i18n[lang].goViewUp+'</font>');
+	$('#goToUp').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
 	
 	if(params.q) {
 		$("#s").val(params.q);

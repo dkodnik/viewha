@@ -10,7 +10,9 @@
 	<title>viewma</title>
 	
 	<link rel="stylesheet" href="./vm.css">
-<style type="text/css"></style></head>
+	<link rel="stylesheet" href="./tipsy.css">
+	<style type="text/css"></style>
+</head>
 <body>
 
 <div id="blackfonscreen"></div>
@@ -19,10 +21,12 @@
 	<h1 id="logosrch">viewma <small style="display:none;"></small></h1>
 		<fieldset>
 			<div id="leftSrcTrg"><div id="leftSrcTrg_ico"></div><div id="leftSrcTrg_close" title="">&#8855;</div></div>
-           	<input id="s" type="text" placeholder="" autofocus speech="speech" x-webkit-speech="x-webkit-speech" title="">
+           	<input id="s" type="text" placeholder="" autofocus="autofocus" autocomplete="off" speech="speech" x-webkit-speech="x-webkit-speech" title="">
            	<p id="clearButton" title="">&#8855;</p>
             <input type="submit" value="&#8250;" id="submitButton" title="">
         </fieldset>
+
+        <div class="autocompl"><ul id="hlpCompl"></ul></div>
 
         <div class="help_dir_bottom">
         	<h2 class="help_left"><p>&#8593; </p><br><small></small></h2>
@@ -44,6 +48,7 @@
 
 	<!-- Scripts -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	<script src="./jquery.tipsy.js"></script>
 	<script src="./vm.js"></script>
 
 </body>
