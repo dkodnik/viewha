@@ -18,6 +18,7 @@ jQuery(function($){
 	var helpViewUsr=false; // подсказка показывается пользователю?
 	var srcLineFocus=true; // строка ввода запроса в фокусе? (по умолчанию на #s установлен "autofocus")
 	var sourceResData=false; // результат поиска
+	var sourceResDataEnd=false; // это конец(последний) результат поиска
 
 	var cursor=0;
 	var sttngs={};
@@ -38,7 +39,8 @@ jQuery(function($){
 			helpSrcYFocusN: 'нажмите синюю кнопку со стрелкой ">", для поиска по запросу',
 			helpSrcNFocusY1: '(1) - сформулируйте свой запрос и введите сюда',
 			helpSrcNFocusY2: '(2) - нажмите синюю кнопку со стрелкой ">" для поиска по запросу или клавишу "Enter &#x23ce;"',
-			helpSrcNFocusN: 'нажмите на строку поиска и введите сюда свой запрос'
+			helpSrcNFocusN: 'нажмите на строку поиска и введите сюда свой запрос',
+			otherSrcEng: 'В других поисковиках:'
 		},
 		'en':{
 			viewma_trn: '&#8592; [vjuːma]',
@@ -55,9 +57,69 @@ jQuery(function($){
 			helpSrcYFocusN: 'click the blue arrow button ">" to search for on request',
 			helpSrcNFocusY1: '(1) - specify your request and enter here',
 			helpSrcNFocusY2: '(2) - press the blue arrow button ">" to search for on-demand, or press "Enter &#x23ce;"',
-			helpSrcNFocusN: 'click on the search bar and enter your query here'
+			helpSrcNFocusN: 'click on the search bar and enter your query here',
+			otherSrcEng: 'In other search engines:'
 		}
 	};
+
+	function googleMap(qre) {
+		var resultsDiv = $('#resultsDiv');
+		var apiURL = 'https://maps.googleapis.com/maps/api/geocode/json';
+		$.getJSON(apiURL,{address:qre,language:lang,sensor:false},function(r){
+			if(r.status=="OK") {
+				var rsl=r.results;
+
+				var pageContainer;
+
+				if($("#thelist").length) {
+					pageContainer = $('#thelist');
+				} else {
+					pageContainer = $('<ul>',{id:'thelist',class:'pageContainer'});
+				}
+				
+				pageContainer.appendTo(resultsDiv);
+
+				if(rsl.length>0) {
+					/*for (var i in rsl) {
+						var oner=rsl[i];
+					}*/
+					var oner=rsl[0];
+					console.log(oner.geometry.location.lat);
+					console.log(oner.geometry.location.lng);
+
+					var htmlEndForm='<li class="webResult" gourl="" style="cursor:default;"><div class="cntnt" style="width:100%;height:100%;">';
+					htmlEndForm+='<div id="map" class="leaflet-container leaflet-fade-anim" style="position:relative;width:100%;height:100%;" tabindex="0"></div>';
+					htmlEndForm+='<div class="infSrc">';
+					htmlEndForm+=oner.formatted_address;
+					htmlEndForm+='</div>';
+					htmlEndForm+='</div></li>';
+					$('#thelist').append(htmlEndForm);
+
+					var cmAttr = '',
+						cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+						//cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+
+					var midnight  = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr});
+					var map = L.map('map', {
+						center: [oner.geometry.location.lat, oner.geometry.location.lng],
+						zoom: 14,
+						zoomControl: false, // Скрываем кнопки упрвеления картой (false)
+						attributionControl: false, // Скрываем стандартный атрибут о карте
+						layers: [midnight]
+					});
+					L.control.attribution({prefix:''/*'Права'*/}).addTo(map); //'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+
+					
+
+					// add a marker in the given location, attach some popup content to it and open the popup
+					/*L.marker([oner.geometry.location.lat, oner.geometry.location.lng]).addTo(map)
+						.bindPopup('A pretty CSS3 popup. <br> Easily customizable.')
+						.openPopup();*/
+				}
+				
+			}
+		});
+	}
 	
 	
 	function googleSearch(settings){
@@ -87,8 +149,8 @@ jQuery(function($){
 		
 		$.getJSON(apiURL,{q:settings.term,rsz:settings.perPage,start:settings.page*settings.perPage},function(r){
 			
+			if(r.responseData) {
 			var results = r.responseData.results;
-			$('#more').remove();
 			
 			if(results.length){
 				
@@ -156,17 +218,12 @@ jQuery(function($){
 				},function(){
 					var el = $(this);
 					// zoomer - off
+					el.css('z-index','1');
+					el.find('.cntnt').removeClass('zoom');
 					if(el.attr('timeZoom')!=0) {
 						clearTimeout(el.attr('timeZoom'));
 						el.attr('timeZoom',0);
-
-						el.css('z-index','1');
-						el.find('.cntnt').removeClass('zoom');
 					}
-					/*if( el.find('.cntnt').hasClass('zoom') ) {
-						el.css('z-index','1');
-						el.find('.cntnt').removeClass('zoom');
-					}*/
 					
 					el.find('.srcThisSite').css('display','none');
 				});
@@ -178,7 +235,21 @@ jQuery(function($){
 				resultsDiv.empty();
 				$('<p>',{class:'notFound',html:i18n[lang].notFound}).hide().appendTo(resultsDiv).fadeIn();*/
 			}
+			}
 		});
+		}
+	}
+
+	function result_end(){
+		if(!sourceResDataEnd) {
+			var htmlEndForm='<li class="webResult" gourl="" style="cursor:default;"><div class="cntnt" style="padding:10px;">';
+			htmlEndForm+='<h2>'+i18n[lang].otherSrcEng+'</h2>';
+			htmlEndForm+='<a href="https://www.google.com/search?q='+$('#s').val()+'" target="_blank" style="font-size:15px;"><img src="https://www.google.com/favicon.ico" class="ico" style="margin: 0 15px;"> Google</a><br /><br />';
+			htmlEndForm+='<a href="http://www.yandex.com/yandsearch?text='+$('#s').val()+'" target="_blank" style="font-size:15px;"><img src="http://www.yandex.ru/favicon.ico" class="ico" style="margin: 0 15px;"> Yandex</a><br /><br />';
+			htmlEndForm+='<a href="http://www.bing.com/search?q='+$('#s').val()+'" target="_blank" style="font-size:15px;"><img src="http://www.bing.com/favicon.ico" class="ico" style="margin: 0 15px;"> Bing</a><br /><br />';
+			htmlEndForm+='<a href="http://www.wolframalpha.com/input/?i='+$('#s').val()+'" target="_blank" style="font-size:15px;"><img src="http://www.wolframalpha.com/favicon.ico" class="ico" style="margin: 0 15px;"> WolframAlpha</a>';
+			htmlEndForm+='</div></li>';
+			$('#thelist').append(htmlEndForm);
 		}
 	}
 	
@@ -303,6 +374,8 @@ jQuery(function($){
 			$("#logosrch").css('display','none');
 			viewTypeData=true;
 			hideHelp();
+
+			googleMap($('#s').val());
 
 			googleSearch(dataSearch);
 		}
@@ -459,7 +532,9 @@ jQuery(function($){
 					}
 				}
 			});
-		}}
+		} else {
+			$('.autocompl').hide();
+		} }
 	});
 
 	$('#s').focus(function(){
@@ -513,13 +588,20 @@ jQuery(function($){
 		hideHelp();
 		var scro=$('#page').scrollTop();
 		if(scro>0) {
+			$('.autocompl').hide(); // закрываем, иногда остается открытым за позднего ответа
 			$('#goToUp').show("slow");
 		} else {
 			$('#goToUp').hide();
 		}
 		if (scro == $('#resultsDiv').height() - $('#page').height()){
+			// cursor.estimatedResultCount - количество всего найденных результатов
 			if( +cursor.estimatedResultCount > (sttngs.page+1)*sttngs.perPage){
-				googleSearch({append:true,page:sttngs.page+1,siteURL:sttngs.siteURL});
+				if(cursor.currentPageIndex<7) { // Ограничения у Google, максимум ответов 64(8*8)
+					googleSearch({append:true,page:sttngs.page+1,siteURL:sttngs.siteURL});
+				} else {
+					result_end();
+					sourceResDataEnd=true;
+				}
 			}
 		}
 	});
@@ -534,6 +616,7 @@ jQuery(function($){
 
 	$('#searchForm').submit(function(){
 		$('.autocompl').hide();
+		sourceResDataEnd=false;
 		if(sttngs) {
 			if(sttngs.siteURL!='') {
 				goSearch({siteURL:sttngs.siteURL});

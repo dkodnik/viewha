@@ -352,6 +352,8 @@ h2.help_right small {
   background:#333;
   background:rgba(0, 0, 0, 0.75);
   line-height:1;
+  overflow: hidden;
+  min-height: 10px;
 }
 
 .srcThisSite {
@@ -513,7 +515,6 @@ font.fs15{
   .webResult .infSrc {
     width:270px;
     max-height: 170px;
-    min-height: 100px;
   }
   .cntnt.zoom .infSrc {
     width: 420px;
