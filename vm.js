@@ -35,6 +35,7 @@ jQuery(function($){
 			notFound: 'Ничего не найдено!',
 			searchThisSite: 'Поиск по сайту:',
 			searchThisSiteM: 'искать на этом сайте',
+			searchMapSiteM: 'искать на карте',
 			helpSrcYFocusY: 'нажмите клавишу "Enter &#x23ce;" или синюю кнопку со стрелкой ">", для поиска по запросу',
 			helpSrcYFocusN: 'нажмите синюю кнопку со стрелкой ">", для поиска по запросу',
 			helpSrcNFocusY1: '(1) - сформулируйте свой запрос и введите сюда',
@@ -53,6 +54,7 @@ jQuery(function($){
 			notFound: 'No Results Were Found!',
 			searchThisSite: 'Search this site:',
 			searchThisSiteM: 'search this site',
+			searchMapSiteM: 'search on the map',
 			helpSrcYFocusY: 'press "Enter &#x23ce;" or the blue arrow button ">" to search for on request',
 			helpSrcYFocusN: 'click the blue arrow button ">" to search for on request',
 			helpSrcNFocusY1: '(1) - specify your request and enter here',
@@ -84,16 +86,50 @@ jQuery(function($){
 						var oner=rsl[i];
 					}*/
 					var oner=rsl[0];
-					console.log(oner.geometry.location.lat);
-					console.log(oner.geometry.location.lng);
 
-					var htmlEndForm='<li class="webResult" gourl="" style="cursor:default;"><div class="cntnt" style="width:100%;height:100%;">';
+					// FIXME: Нужно "map" контейнер как для "pageContainer"(стр.76-80), иначе задваивается #map
+
+					//if(sttngs.siteURL!='#map') {
+
+					
+					var htmlEndForm='';
+					htmlEndForm='<li class="webResultMap" gourl="" style="cursor:default;">';
+					htmlEndForm+='<div class="cntnt">';
 					htmlEndForm+='<div id="map" class="leaflet-container leaflet-fade-anim" style="position:relative;width:100%;height:100%;" tabindex="0"></div>';
 					htmlEndForm+='<div class="infSrc">';
-					htmlEndForm+=oner.formatted_address;
-					htmlEndForm+='</div>';
-					htmlEndForm+='</div></li>';
+					htmlEndForm+='<img src="http://www.openstreetmap.org/favicon.ico" class="ico">';
+					htmlEndForm+='<p>'+oner.formatted_address+'</p>';
+					htmlEndForm+='<div class="srcThisSite" gourl="" original-title="<font class=\'fs15\'>'+i18n[lang].searchMapSiteM+'</font>">'+'&#8250;'+'</div>';
+					htmlEndForm+='</div></div>';
+					htmlEndForm+='</li>';
+					
 					$('#thelist').append(htmlEndForm);
+					
+					$('.webResultMap').find('.srcThisSite').on('click',function(){
+						var el = $(this);
+						var goSiteUrl=el.attr('gourl');
+
+						//console.log('0');
+						$('#map').appendTo($('#page')); // перемещаем #map
+						resultsDiv.empty();
+						console.log("goSiteUrl=Map");
+						$("#leftSrcTrg_ico").html('<img src="http://www.openstreetmap.org/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' Map">');
+						sttngs.siteURL='#map';
+
+						return false;
+					});
+
+					$('.webResultMap').find('.srcThisSite').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
+
+					$('.webResultMap').hover(function(){
+						var el = $(this);
+						el.find('.srcThisSite').css('display','block'); 
+					},function(){
+						var el = $(this);
+						el.find('.srcThisSite').css('display','none');
+					});
+					//}
+					
 
 					var cmAttr = '',
 						cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
@@ -173,9 +209,9 @@ jQuery(function($){
 				}
 				
 				
-				if(!settings.append){
+				/*if(!settings.append){
 					resultsDiv.empty();
-				}
+				}*/
 				
 				pageContainer.appendTo(resultsDiv);
 				
@@ -213,8 +249,6 @@ jQuery(function($){
 						el.find('.cntnt').removeClass('zoom').addClass('zoom');
 					}, 3000); // 3sec
 					el.attr('timeZoom',idST);
-					
-					
 				},function(){
 					var el = $(this);
 					// zoomer - off
@@ -377,7 +411,9 @@ jQuery(function($){
 
 			googleMap($('#s').val());
 
-			googleSearch(dataSearch);
+			if(sttngs.siteURL!='#map') {
+				googleSearch(dataSearch);
+			}
 		}
 	}
 
@@ -570,6 +606,10 @@ jQuery(function($){
 			$("#leftSrcTrg_ico").html('');
 			$('#leftSrcTrg_close').css('display','none');
 			$('#leftSrcTrg_ico').css('opacity','1');
+			if(sttngs.siteURL=='#map') {
+				$("#map").remove();
+				sttngs.siteURL='';
+			}
 			goSearch({siteURL:''});
 		}
 	});

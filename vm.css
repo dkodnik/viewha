@@ -113,6 +113,11 @@ h2.help_right small {
   /*background: #a03232;*/
 }
 
+.cntnt {
+  width: 100%;
+  height: 100%;
+}
+
 .cntnt.zoom {
   margin-top: -50%;
   margin-left: -75%;
@@ -309,30 +314,29 @@ h2.help_right small {
 /* Web & news results */
 
 
-.webResult{ 
-  /*text-shadow:1px 1px 0 #586a75;*/
+.webResult, .webResultMap{
   margin-bottom:50px;
   z-index: 1;
   position:relative;
   float:left;
 }
-.webResult h2{
+.webResult h2, .webResultMap h2{
   font-size:18px;
   font-weight:normal;
 }
-.webResult h2 b{ color:#fff; }
-.webResult h2 a{ color:#eee;border:none;}
-.webResult p{ line-height:1.5;/*padding:15px 20px;*/}
-.webResult p b{ color:white;}
-.webResult > a{ margin-left:20px;}
-.webResult img{
+.webResult h2 b, .webResultMap h2 b{ color:#fff; }
+.webResult h2 a, .webResultMap h2 a{ color:#eee;border:none;}
+.webResult p, .webResultMap p{ line-height:1.5;/*padding:15px 20px;*/}
+.webResult p b, .webResultMap p b{ color:white;}
+.webResult > a, .webResultMap > a{ margin-left:20px;}
+.webResult img, .webResultMap img{
   width: 400px;
   height: 300px;
   background-color:#000;
   border-radius: 2px;
 }
 
-.webResult img.ico, #leftSrcTrg_ico .ico {
+.webResult img.ico, .webResultMap img.ico, #leftSrcTrg_ico .ico {
   width:16px;
   height:16px;
   border:none;
@@ -341,7 +345,7 @@ h2.help_right small {
   background-color:transparent;
 }
 
-.webResult .infSrc {
+.webResult .infSrc, .webResultMap .infSrc {
   margin: 0;
   width:370px;
   position:absolute;
@@ -488,11 +492,11 @@ font.fs15{
   #s{
     width: 330px;
   }
-  .frame ul li, .webResult img{
+  .frame ul li, .webResult img, .webResultMap img{
     width: 300px;
     height: 200px;
   }
-  .webResult .infSrc {
+  .webResult .infSrc, .webResultMap .infSrc {
     width:270px;
   }
   .cntnt.zoom .infSrc {
@@ -508,11 +512,11 @@ font.fs15{
   }
 }
 @media (min-width: 980px) {
-  .frame ul li, .webResult img{
+  .frame ul li, .webResult img, .webResultMap img{
     width: 300px;
     height: 200px;
   }
-  .webResult .infSrc {
+  .webResult .infSrc, .webResultMap .infSrc{
     width:270px;
     max-height: 170px;
   }
@@ -521,11 +525,11 @@ font.fs15{
   }
 }
 @media (min-width: 1200px) {
-  .frame ul li, .webResult img{
+  .frame ul li, .webResult img, .webResultMap img{
     width: 400px;
     height: 300px;
   }
-  .webResult .infSrc {
+  .webResult .infSrc, .webResultMap .infSrc{
     width:370px;
   }
   .cntnt.zoom .infSrc {
