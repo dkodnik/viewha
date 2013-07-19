@@ -20,6 +20,8 @@ jQuery(function($){
 	var sourceResData=false; // результат поиска
 	var sourceResDataEnd=false; // это конец(последний) результат поиска
 
+	var map;  // for Map-LeafletJS
+
 	var cursor=0;
 	var sttngs={};
 
@@ -71,6 +73,11 @@ jQuery(function($){
 			if(r.status=="OK") {
 				var rsl=r.results;
 
+				// FIXME: Нужно "map" контейнер как для "pageContainer"(стр.76-80), иначе задваивается #map
+				console.log('su='+sttngs.siteURL);
+
+				if(sttngs.siteURL!='#map') {
+
 				var pageContainer;
 
 				if($("#thelist").length) {
@@ -86,11 +93,6 @@ jQuery(function($){
 						var oner=rsl[i];
 					}*/
 					var oner=rsl[0];
-
-					// FIXME: Нужно "map" контейнер как для "pageContainer"(стр.76-80), иначе задваивается #map
-
-					//if(sttngs.siteURL!='#map') {
-
 					
 					var htmlEndForm='';
 					htmlEndForm='<li class="webResultMap" gourl="" style="cursor:default;">';
@@ -128,20 +130,19 @@ jQuery(function($){
 						var el = $(this);
 						el.find('.srcThisSite').css('display','none');
 					});
-					//}
-					
 
 					var cmAttr = '',
 						cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
 						//cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
 
 					var midnight  = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr});
-					var map = L.map('map', {
+					map = L.map('map', {
 						center: [oner.geometry.location.lat, oner.geometry.location.lng],
 						zoom: 14,
 						zoomControl: false, // Скрываем кнопки упрвеления картой (false)
 						attributionControl: false, // Скрываем стандартный атрибут о карте
-						layers: [midnight]
+						layers: [midnight],
+						trackResize: true
 					});
 					L.control.attribution({prefix:''/*'Права'*/}).addTo(map); //'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 
@@ -151,6 +152,13 @@ jQuery(function($){
 					/*L.marker([oner.geometry.location.lat, oner.geometry.location.lng]).addTo(map)
 						.bindPopup('A pretty CSS3 popup. <br> Easily customizable.')
 						.openPopup();*/
+				}
+
+				} else {
+					if(rsl.length>0) {
+						var oner=rsl[0];
+						map.setView(new L.LatLng(oner.geometry.location.lat, oner.geometry.location.lng),14);
+					}
 				}
 				
 			}
