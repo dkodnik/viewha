@@ -66,6 +66,29 @@ jQuery(function($){
 		}
 	};
 
+	function drawMap(idObj,c_lat,c_lng) {
+		var cmAttr = '',
+			cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+			//cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+
+		var midnight  = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr});
+
+		map = L.map(idObj, {
+			center: [c_lat, c_lng],
+			zoom: 14,
+			zoomControl: false, // Скрываем кнопки упрвеления картой (false)
+			attributionControl: false, // Скрываем стандартный атрибут о карте
+			layers: [midnight],
+			trackResize: true
+		});
+		L.control.attribution({prefix:''/*'Права'*/}).addTo(map); //'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+
+		// add a marker in the given location, attach some popup content to it and open the popup
+		/*L.marker([oner.geometry.location.lat, oner.geometry.location.lng]).addTo(map)
+			.bindPopup('A pretty CSS3 popup. <br> Easily customizable.')
+			.openPopup();*/
+	}
+
 	function googleMap(qre) {
 		var resultsDiv = $('#resultsDiv');
 		var apiURL = 'https://maps.googleapis.com/maps/api/geocode/json';
@@ -92,12 +115,13 @@ jQuery(function($){
 					/*for (var i in rsl) {
 						var oner=rsl[i];
 					}*/
+
 					var oner=rsl[0];
 					
 					var htmlEndForm='';
 					htmlEndForm='<li class="webResultMap" gourl="" style="cursor:default;">';
 					htmlEndForm+='<div class="cntnt">';
-					htmlEndForm+='<div id="map" class="leaflet-container leaflet-fade-anim" style="position:relative;width:100%;height:100%;" tabindex="0"></div>';
+					htmlEndForm+='<div id="map" style="position:relative;width:100%;height:100%;" tabindex="0"></div>';
 					htmlEndForm+='<div class="infSrc">';
 					htmlEndForm+='<img src="http://www.openstreetmap.org/favicon.ico" class="ico">';
 					htmlEndForm+='<p>'+oner.formatted_address+'</p>';
@@ -110,13 +134,14 @@ jQuery(function($){
 					$('.webResultMap').find('.srcThisSite').on('click',function(){
 						var el = $(this);
 						var goSiteUrl=el.attr('gourl');
-
-						//console.log('0');
-						$('#map').appendTo($('#page')); // перемещаем #map
+						
+						$('<div>',{id:'map_full',class:'',style:'width:100%;height:100%;position:fixed;top:0;left:0;'}).appendTo($('#page'));
 						resultsDiv.empty();
 						console.log("goSiteUrl=Map");
 						$("#leftSrcTrg_ico").html('<img src="http://www.openstreetmap.org/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' Map">');
 						sttngs.siteURL='#map';
+
+						drawMap('map_full',oner.geometry.location.lat, oner.geometry.location.lng);
 
 						return false;
 					});
@@ -131,27 +156,8 @@ jQuery(function($){
 						el.find('.srcThisSite').css('display','none');
 					});
 
-					var cmAttr = '',
-						cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-						//cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+					drawMap('map',oner.geometry.location.lat, oner.geometry.location.lng);
 
-					var midnight  = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr});
-					map = L.map('map', {
-						center: [oner.geometry.location.lat, oner.geometry.location.lng],
-						zoom: 14,
-						zoomControl: false, // Скрываем кнопки упрвеления картой (false)
-						attributionControl: false, // Скрываем стандартный атрибут о карте
-						layers: [midnight],
-						trackResize: true
-					});
-					L.control.attribution({prefix:''/*'Права'*/}).addTo(map); //'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-
-					
-
-					// add a marker in the given location, attach some popup content to it and open the popup
-					/*L.marker([oner.geometry.location.lat, oner.geometry.location.lng]).addTo(map)
-						.bindPopup('A pretty CSS3 popup. <br> Easily customizable.')
-						.openPopup();*/
 				}
 
 				} else {
@@ -225,6 +231,7 @@ jQuery(function($){
 				
 				cursor = r.responseData.cursor;
 
+				$('.webResult').find('.srcThisSite').off(); // удаляем все заранее установленные обработчики событий
 				$('.webResult').find('.srcThisSite').on('click',function(){
 					var el = $(this);
 					//el.tipsy({live:true,html:true, gravity:'se', delayIn:700, delayOut:200});
@@ -238,6 +245,7 @@ jQuery(function($){
 				$('.webResult').find('.srcThisSite').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
 
 
+				$('.webResult').off(); // удаляем все заранее установленные обработчики событий
 				$('.webResult').on('click',function(){
 					var el = $(this);
 					window.open(el.attr('gourl'),'_blank'); 
@@ -250,7 +258,6 @@ jQuery(function($){
 						// только для всех сайтов, а не определенного
 						el.find('.srcThisSite').css('display','block'); 
 					}
-
 					// zoomer - on					
 					var idST=setTimeout(function(){
 						el.css('z-index','10');
@@ -615,7 +622,8 @@ jQuery(function($){
 			$('#leftSrcTrg_close').css('display','none');
 			$('#leftSrcTrg_ico').css('opacity','1');
 			if(sttngs.siteURL=='#map') {
-				$("#map").remove();
+				//$("#map").remove();
+				$("#map_full").remove();
 				sttngs.siteURL='';
 			}
 			goSearch({siteURL:''});
@@ -721,7 +729,7 @@ jQuery(function($){
 	$('#goToUp').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
 	
 	if(params.q) {
-		$("#s").val(params.q);
+		$("#s").val(decodeURIComponent(params.q));
 		if(params.site) {
 			$("#leftSrcTrg_ico").html('<img src="http://'+params.site+'/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' '+params.site+'">');
 			goSearch({siteURL:params.site});
