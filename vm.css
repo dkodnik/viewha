@@ -179,6 +179,18 @@ h2.help_right small {
   cursor: pointer;
 }
 
+#off-screen-nav {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  background: #333;
+  visibility: hidden;
+  width: 192px;
+}
+
 #page{
   height: 100%;
   overflow-x: hidden;

@@ -11,18 +11,21 @@
 	
 	<link rel="stylesheet" href="./vm.css">
 	<link rel="stylesheet" href="./tipsy.css">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
 	<style type="text/css"></style>
 </head>
 <body>
 
 <div id="blackfonscreen"></div>
 
+<nav id="off-screen-nav"></nav>
+
 <form id="searchForm" method="post" class="cn">
 	<h1 id="logosrch">viewma <small style="display:none;"></small></h1>
 		<fieldset>
-			<div id="leftSrcTrg"><div id="leftSrcTrg_ico"></div><div id="leftSrcTrg_close" title="">&#8855;</div></div>
+			<div id="leftSrcTrg"><div id="leftSrcTrg_ico"></div><div id="leftSrcTrg_close" title=""><i class="icon-ban-circle"></i></div></div>
            	<input id="s" type="text" placeholder="" autofocus="autofocus" autocomplete="off" speech="speech" x-webkit-speech="x-webkit-speech" title="">
-           	<p id="clearButton" title="">&#8855;</p>
+           	<p id="clearButton" title=""><i class="icon-ban-circle"></i></p>
             <input type="submit" value="&#8250;" id="submitButton" title="">
         </fieldset>
 
@@ -43,7 +46,7 @@
 
 <div id="page">    
     <div class="frame" id="resultsDiv"></div>
-    <div class="srcThisSite" id="goToUp" title="" style="z-index:1000;right:20px;">&#8593;</div>
+    <div class="srcThisSite" id="goToUp" title="" style="z-index:1000;right:20px;padding: 4px 10px 10px 10px;"><i class="icon-double-angle-up"></i></div>
 </div>
 
 	<!-- Scripts -->
