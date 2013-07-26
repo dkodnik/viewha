@@ -27,7 +27,7 @@ jQuery(function($){
 
 	var i18n={
 		'ru':{
-			viewma_trn: '&#8592; [вьюма]',
+			viewha_trn: '&#8592; [вьюха]',
 			cnclSrcSite: 'Отменить поиск по сайту',
 			entrYInqH: 'Сюда введите свой запрос',
 			inpSrcQr: 'Поле ввода запроса для поиска',
@@ -46,7 +46,7 @@ jQuery(function($){
 			otherSrcEng: 'В других поисковиках:'
 		},
 		'en':{
-			viewma_trn: '&#8592; [vjuːma]',
+			viewha_trn: '&#8592; [vjuːha]',
 			cnclSrcSite: 'Cancel Search Site',
 			entrYInqH: 'Enter your inquiry here',
 			inpSrcQr: 'The input field for the search query',
@@ -123,6 +123,7 @@ jQuery(function($){
 					htmlEndForm+='<div class="cntnt">';
 					htmlEndForm+='<div id="map" style="position:relative;width:100%;height:100%;" tabindex="0"></div>';
 					htmlEndForm+='<div class="infSrc">';
+					htmlEndForm+='<div class="markerResSrc"><i class="icon-map-marker icon-2x"></i></div>';
 					htmlEndForm+='<img src="http://www.openstreetmap.org/favicon.ico" class="ico">';
 					htmlEndForm+='<p>'+oner.formatted_address+'</p>';
 					htmlEndForm+='<div class="srcThisSite" gourl="" original-title="<font class=\'fs15\'>'+i18n[lang].searchMapSiteM+'</font>">'+'&#8250;'+'</div>';
@@ -138,7 +139,7 @@ jQuery(function($){
 						$('<div>',{id:'map_full',class:'',style:'width:100%;height:100%;position:fixed;top:0;left:0;'}).appendTo($('#page'));
 						resultsDiv.empty();
 						console.log("goSiteUrl=Map");
-						$("#leftSrcTrg_ico").html('<img src="http://www.openstreetmap.org/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' Map">');
+						$("#leftSrcTrg_ico").html('<img src="http://www.openstreetmap.org/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[lang].searchThisSite+' Map">');
 						sttngs.siteURL='#map';
 
 						drawMap('map_full',oner.geometry.location.lat, oner.geometry.location.lng);
@@ -237,7 +238,7 @@ jQuery(function($){
 					//el.tipsy({live:true,html:true, gravity:'se', delayIn:700, delayOut:200});
 					var goSiteUrl=el.attr('gourl');
 					console.log("goSiteUrl="+goSiteUrl);
-					$("#leftSrcTrg_ico").html('<img src="http://'+goSiteUrl+'/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' '+goSiteUrl+'">');
+					$("#leftSrcTrg_ico").html('<img src="http://'+goSiteUrl+'/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[lang].searchThisSite+' '+goSiteUrl+'">');
 					goSearch({siteURL:goSiteUrl});
 					return false;
 				});
@@ -316,6 +317,7 @@ jQuery(function($){
 					//'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.visibleUrl,'">',
 					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
+					'<div class="markerResSrc"><i class="icon-file-text-alt icon-2x"></i></div>',
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
@@ -333,6 +335,7 @@ jQuery(function($){
 					//'<img src="',r.tbUrl,'" width="',r.tbWidth,'px" height="',r.tbHeight,'px" />',
 					'<img src="',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
+					'<div class="markerResSrc"><i class="icon-picture icon-2x"></i></div>',
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.visibleUrl,'</a>',
@@ -360,6 +363,7 @@ jQuery(function($){
 					'<div class="cntnt">',
 					imgHtml,
 					'<div class="infSrc">',
+					'<div class="markerResSrc"><i class="icon-film icon-2x"></i></div>',
 					'<img src="http://',r.publisher,'/favicon.ico" class="ico">',
 					'<h2>',r.videoType,'</h2>',
 					'<p>',r.titleNoFormatting,'</p>',
@@ -377,6 +381,7 @@ jQuery(function($){
 					'<div class="cntnt">',
 					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
+					'<div class="markerResSrc"><i class="icon-rss icon-2x"></i></div>',
 					'<img src="http://',hostU,'/favicon.ico" class="ico">',
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
@@ -424,7 +429,16 @@ jQuery(function($){
 			viewTypeData=true;
 			hideHelp();
 
-			googleMap($('#s').val());
+			/*var dSsiteURL=false;
+			if(dataSearch) {
+				if(dataSearch.siteURL!='#map' & dataSearch.siteURL!='' & dataSearch.siteURL!="" & dataSearch.siteURL!=undefined) {
+					dSsiteURL=true;
+				}
+			}
+			if((sttngs.siteURL!='#map' & sttngs.siteURL!='' & sttngs.siteURL!="" & sttngs.siteURL!=undefined) | dSsiteURL) {
+			} else {*/
+				googleMap($('#s').val());
+			//}
 
 			if(sttngs.siteURL!='#map') {
 				googleSearch(dataSearch);
@@ -710,7 +724,7 @@ jQuery(function($){
 	}
 
 	
-	$('#logosrch small').html(i18n[lang].viewma_trn);
+	$('#logosrch small').html(i18n[lang].viewha_trn);
 	$('#s').attr('placeholder',i18n[lang].entrYInqH);
 
 	$('#s').attr('original-title','<font class="fs15">'+i18n[lang].inpSrcQr+'</font>');
@@ -731,7 +745,7 @@ jQuery(function($){
 	if(params.q) {
 		$("#s").val(decodeURIComponent(params.q));
 		if(params.site) {
-			$("#leftSrcTrg_ico").html('<img src="http://'+params.site+'/favicon.ico" class="ico" style="margin:2px;" title="'+i18n[lang].searchThisSite+' '+params.site+'">');
+			$("#leftSrcTrg_ico").html('<img src="http://'+params.site+'/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[lang].searchThisSite+' '+params.site+'">');
 			goSearch({siteURL:params.site});
 		} else {
 			goSearch();

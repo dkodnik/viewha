@@ -7,7 +7,7 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<link id="favicon" rel="shortcut icon" href="./favicon.ico" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<title>viewma</title>
+	<title>viewha</title>
 	
 	<link rel="stylesheet" href="./vm.css">
 	<link rel="stylesheet" href="./tipsy.css">
@@ -21,12 +21,15 @@
 <nav id="off-screen-nav"></nav>
 
 <form id="searchForm" method="post" class="cn">
-	<h1 id="logosrch">viewma <small style="display:none;"></small></h1>
+	<h1 id="logosrch">viewha <small style="display:none;"></small></h1>
 		<fieldset>
-			<div id="leftSrcTrg"><div id="leftSrcTrg_ico"></div><div id="leftSrcTrg_close" title=""><i class="icon-ban-circle"></i></div></div>
+			<div class="searchForm-shadow"></div>
+			<div class="searchForm-visual">
+			<div id="leftSrcTrg"><div id="leftSrcTrg_ico"></div><div id="leftSrcTrg_close" title=""><i class="icon-remove-circle"></i></div></div>
            	<input id="s" type="text" placeholder="" autofocus="autofocus" autocomplete="off" speech="speech" x-webkit-speech="x-webkit-speech" title="">
-           	<p id="clearButton" title=""><i class="icon-ban-circle"></i></p>
+           	<p id="clearButton" title=""><i class="icon-remove-circle"></i></p>
             <input type="submit" value="&#8250;" id="submitButton" title="">
+            </div>
         </fieldset>
 
         <div class="autocompl"><ul id="hlpCompl"></ul></div>
