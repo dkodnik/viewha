@@ -3,12 +3,11 @@ html {
   height: 100%;
 }
 body { 
-  background: #1f1f1f;
   font-size: 13px;
   color: #eee;
   font-family: Arial, Helvetica, sans-serif;
   height: 100%;
-  margin: 0 0 0 10px;
+  margin: 0;
 }
 small {
   font-size: 85%;
@@ -20,6 +19,29 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small {
 }
 h1 small {
   font-size: 70%;
+}
+
+#layer-body {
+  font-size: 13px;
+  color: #eee;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+#layer-body.viewMenu {
+  /*margin-left: 200px;*/
+}
+
+#backgroundfont {
+  background: #1f1f1f;
+  height: 100%;
+  width: 100%;
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .container { 
@@ -180,21 +202,37 @@ h2.help_right small {
   cursor: pointer;
 }
 
-#off-screen-nav {
+#layer-nav {
   position: fixed;
-  z-index: 1000;
+  z-index: 1;
   top: 0;
   left: 0;
   bottom: 0;
   overflow-y: auto;
   background: #333;
-  visibility: hidden;
-  width: 192px;
+  width: 300px;
+}
+
+#nav-button {
+  position: absolute;
+  z-index: 2000;
+  top: 25px;
+  left: 10px;
+  cursor: pointer;
+  color: #999;
+}
+
+#nav-button:hover {
+  color: #fff;
 }
 
 #page{
   height: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 9;
+  margin: 0 0 0 10px;
+  position: relative;
 }
 
 #resultsDiv{
@@ -218,8 +256,9 @@ h2.help_right small {
 }
 
 #searchForm.fix {
-  position: fixed;
+  position: absolute;
   top:10px;
+  left:35px;
 }
 
 #searchForm.fix input, #searchForm.fix #leftSrcTrg {
@@ -365,9 +404,12 @@ h2.help_right small {
 
 .webResult, .webResultMap{
   margin-bottom:50px;
-  z-index: 1;
+  z-index: 10;
   position:relative;
   float:left;
+  webkit-box-shadow: 0px 0px 10px #000;
+  -moz-box-shadow: 0px 0px 10px #000;
+  box-shadow: 0px 0px 10px #000;
 }
 .webResult h2, .webResultMap h2{
   font-size:18px;

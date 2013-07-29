@@ -28,6 +28,7 @@ jQuery(function($){
 	var i18n={
 		'ru':{
 			viewha_trn: '&#8592; [вьюха]',
+			navMenu: 'Меню',
 			cnclSrcSite: 'Отменить поиск по сайту',
 			entrYInqH: 'Сюда введите свой запрос',
 			inpSrcQr: 'Поле ввода запроса для поиска',
@@ -47,6 +48,7 @@ jQuery(function($){
 		},
 		'en':{
 			viewha_trn: '&#8592; [vjuːha]',
+			navMenu: 'Menu',
 			cnclSrcSite: 'Cancel Search Site',
 			entrYInqH: 'Enter your inquiry here',
 			inpSrcQr: 'The input field for the search query',
@@ -261,14 +263,14 @@ jQuery(function($){
 					}
 					// zoomer - on					
 					var idST=setTimeout(function(){
-						el.css('z-index','10');
+						el.css('z-index','20');
 						el.find('.cntnt').removeClass('zoom').addClass('zoom');
 					}, 3000); // 3sec
 					el.attr('timeZoom',idST);
 				},function(){
 					var el = $(this);
 					// zoomer - off
-					el.css('z-index','1');
+					el.css('z-index','10');
 					el.find('.cntnt').removeClass('zoom');
 					if(el.attr('timeZoom')!=0) {
 						clearTimeout(el.attr('timeZoom'));
@@ -457,7 +459,7 @@ jQuery(function($){
 		$('#blackfonscreen').hide();
 		if(viewTypeData) {
 			$('#blackfonscreen').css('z-index','1050');
-			$('#thelist li').css('z-index','1');
+			$('#thelist li').css('z-index','10');
 		}
 	}
 
@@ -709,6 +711,21 @@ jQuery(function($){
 		$('.autocompl').hide();
 	});
 
+	$('#nav-button').click(function(){
+		if($('#layer-body').hasClass('viewMenu')) {
+		//if($('#layer-body').attr('class') == 'viewMenu') {
+			//$('#layer-body').toggleClass('viewMenu');
+			$('#layer-body').animate({'margin-left': '0px'}, 500, 'linear', function() {
+				$('#layer-body').removeClass('viewMenu');
+			});
+		} else {
+			$('#layer-body').animate({'margin-left': '200px'}, 500, 'linear', function() {
+				$('#layer-body').addClass('viewMenu');
+			});
+		}
+		
+	});
+
 	// parse url path..
 	var prmstr = window.location.search.substr(1);
 	var prmarr = prmstr.split ("&");
@@ -732,6 +749,9 @@ jQuery(function($){
 
 	$('#leftSrcTrg_close').attr('original-title','<font class="fs15">'+i18n[lang].cnclSrcSite+'</font>');
 	$('#leftSrcTrg_close').tipsy({html:true, gravity:'nw', delayIn:700, delayOut:200});
+
+	$('#nav-button').attr('original-title','<font class="fs15">'+i18n[lang].navMenu+'</font>');
+	$('#nav-button').tipsy({html:true, gravity:'nw', delayIn:700, delayOut:200});
 
 	$('#clearButton').attr('original-title','<font class="fs15">'+i18n[lang].delSrcQr+'</font>');
 	$('#clearButton').tipsy({html:true, gravity:'ne', delayIn:700, delayOut:200});

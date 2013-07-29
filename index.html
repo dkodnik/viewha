@@ -23,8 +23,16 @@
 
 <div id="blackfonscreen"></div>
 
-<nav id="off-screen-nav"></nav>
+<div id="layer-nav">
+	<div class="nav-down" style="color:#999;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);position:absolute;bottom:0;font-size:10px;margin-left:10px;">
+		<p>Powered by <b>Google</b></p>
+		<p>Version 0.1.22 <a href="https://github.com/dkodnik/viewha" target="_blank"><i class="icon-github"></i> GitHub</a></p>
+	</div>
+</div>
 
+<div id="layer-body">
+<div id="backgroundfont"></div>
+<div id="nav-button"><i class="icon-align-justify icon-2x"></i></div>
 <form id="searchForm" method="post" class="cn">
 	<h1 id="logosrch">viewha <small style="display:none;"></small></h1>
 		<fieldset>
@@ -52,9 +60,11 @@
         </noscript></noindex>
     </form>
 
+<div class="srcThisSite" id="goToUp" title="" style="z-index:1000;right:20px;padding: 4px 10px 10px 10px;"><i class="icon-double-angle-up"></i></div>
+
 <div id="page">    
     <div class="frame" id="resultsDiv"></div>
-    <div class="srcThisSite" id="goToUp" title="" style="z-index:1000;right:20px;padding: 4px 10px 10px 10px;"><i class="icon-double-angle-up"></i></div>
+</div>
 </div>
 
 	<!-- Scripts -->
