@@ -427,6 +427,7 @@ jQuery(function($){
 			$('#resultsDiv').html('');
 			$('#searchForm').removeClass('cn fix').addClass('fix');
 			$('#clearButton').css('display','block');
+			$('#resView-button').css('display','block');
 			$("#logosrch").css('display','none');
 			viewTypeData=true;
 			hideHelp();
@@ -562,6 +563,7 @@ jQuery(function($){
 	setTimeout(function(){
 		$('#logosrch small').show("slow");
 	}, 5000); // 5sec
+	
 
 	$('#s').bind('keyup',function(e){
 		var code = e.which;
@@ -704,6 +706,7 @@ jQuery(function($){
 	$('#clearButton').click(function(){
 		$('#resultsDiv').html('');
 		$('#clearButton').css('display','none');
+		$('#resView-button').css('display','none');
 		$("#s").val('');
 		$("#logosrch").css('display','block');
 		$('#searchForm').removeClass('cn fix').addClass('cn');
@@ -725,6 +728,23 @@ jQuery(function($){
 		}
 		
 	});
+
+	// кнопка представления результата поиска (плитка или лист)
+	$('#resView-button').click(function(){
+		if($('#thelist').hasClass('reSline')) {
+			$('#thelist').removeClass("reSline");
+			$('#resView-button').html('<i class="icon-th-list icon-2x"></i>');
+		} else {
+			$('#thelist').addClass("reSline");
+			$('#resView-button').html('<i class="icon-th icon-2x"></i>');
+		}
+	});
+	if($('#thelist').hasClass('reSline')) {
+		$('#resView-button').html('<i class="icon-th icon-2x"></i>');
+	} else {
+		$('#resView-button').html('<i class="icon-th-list icon-2x"></i>');
+	}
+
 
 	// parse url path..
 	var prmstr = window.location.search.substr(1);
