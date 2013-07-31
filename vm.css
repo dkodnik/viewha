@@ -168,6 +168,12 @@ h2.help_right small {
 *
 **/
 
+#map {
+  position:relative;
+  width:100%;
+  height:100%;
+}
+
 .pageContainer {
   /**/
 }
@@ -194,6 +200,16 @@ h2.help_right small {
 .pageContainer.reSline .webResult .infSrc .markerResSrc, .pageContainer.reSline .webResultMap .infSrc .markerResSrc {
   left: 5px;
   right: 0;
+}
+
+.pageContainer.reSline .cntnt.zoom {
+  margin-top: 0;
+  margin-left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 

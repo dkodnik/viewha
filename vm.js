@@ -123,7 +123,7 @@ jQuery(function($){
 					var htmlEndForm='';
 					htmlEndForm='<li class="webResultMap" gourl="" style="cursor:default;">';
 					htmlEndForm+='<div class="cntnt">';
-					htmlEndForm+='<div id="map" style="position:relative;width:100%;height:100%;" tabindex="0"></div>';
+					htmlEndForm+='<div id="map" tabindex="0"></div>';
 					htmlEndForm+='<div class="infSrc">';
 					htmlEndForm+='<div class="markerResSrc"><i class="icon-map-marker icon-2x"></i></div>';
 					htmlEndForm+='<img src="http://www.openstreetmap.org/favicon.ico" class="ico">';
