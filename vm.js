@@ -125,10 +125,12 @@ jQuery(function($){
 					htmlEndForm+='<div class="cntnt">';
 					htmlEndForm+='<div id="map" tabindex="0"></div>';
 					htmlEndForm+='<div class="infSrc">';
+					htmlEndForm+='<div class="isD">';
 					htmlEndForm+='<div class="markerResSrc"><i class="icon-map-marker icon-2x"></i></div>';
 					htmlEndForm+='<img src="http://www.openstreetmap.org/favicon.ico" class="ico">';
 					htmlEndForm+='<p>'+oner.formatted_address+'</p>';
 					htmlEndForm+='<div class="srcThisSite" gourl="" original-title="<font class=\'fs15\'>'+i18n[lang].searchMapSiteM+'</font>">'+'&#8250;'+'</div>';
+					htmlEndForm+='</div>';
 					htmlEndForm+='</div></div>';
 					htmlEndForm+='</li>';
 					
@@ -319,12 +321,14 @@ jQuery(function($){
 					//'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.visibleUrl,'">',
 					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
+					'<div class="isD">',
 					'<div class="markerResSrc"><i class="icon-file-text-alt icon-2x"></i></div>',
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
 					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
+					'</div>',
 					'</div>',
 					'</div>',
 					'</li>'
@@ -337,11 +341,13 @@ jQuery(function($){
 					//'<img src="',r.tbUrl,'" width="',r.tbWidth,'px" height="',r.tbHeight,'px" />',
 					'<img src="',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
+					'<div class="isD">',
 					'<div class="markerResSrc"><i class="icon-picture icon-2x"></i></div>',
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.visibleUrl,'</a>',
 					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
+					'</div>',
 					'</div>',
 					'</div>',
 					'</li>'
@@ -365,12 +371,14 @@ jQuery(function($){
 					'<div class="cntnt">',
 					imgHtml,
 					'<div class="infSrc">',
+					'<div class="isD">',
 					'<div class="markerResSrc"><i class="icon-film icon-2x"></i></div>',
 					'<img src="http://',r.publisher,'/favicon.ico" class="ico">',
 					'<h2>',r.videoType,'</h2>',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.publisher,'</a>',
 					'<div class="srcThisSite" gourl="',r.publisher,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
+					'</div>',
 					'</div>',
 					'</div>',
 					'</li>'
@@ -383,12 +391,14 @@ jQuery(function($){
 					'<div class="cntnt">',
 					'<img src="http://mini.s-shot.ru/1024x768/',widthObj,'/jpeg/?',r.unescapedUrl,'" class="img" />',
 					'<div class="infSrc">',
+					'<div class="isD">',
 					'<div class="markerResSrc"><i class="icon-rss icon-2x"></i></div>',
 					'<img src="http://',hostU,'/favicon.ico" class="ico">',
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.publisher,'</a>',
 					'<div class="srcThisSite" gourl="',hostU,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
+					'</div>',
 					'</div>',
 					'</div>',
 					'</li>'
