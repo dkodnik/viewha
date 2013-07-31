@@ -1,10 +1,31 @@
 jQuery(function($){
 'use strict';
 (function () {
-
-	var lang='ru';
+	
 	var lang_def='en';
 	var lang_all=['ru','en'];
+
+	// настройки котороые будут сохранены в браузере (cookie)
+	var sSettings ={
+		lang: '', // язык en|ru
+		vHelp: true, // показывать подсказки
+		firstStrt: 0, // дата первого запуска
+		vTileList: 'tile', // представление результат: плитка(tile) или список(list)
+		style: 'dark', // стиль темный(dark) или светлый(light)
+		styleMap: 'light', // стиль карты темный(dark) или светлый(light)
+		urlBckgrndImg: '', // URL - фонового изображения
+		searchType: { // тип поиска
+			web:true,
+			img:true,
+			news:true,
+			video:true,
+			map:true
+		}
+	};
+	if($.cookie('vhSettings')) {
+		sSettings = JSON.parse($.cookie('vhSettings'));
+	}
+	console.log(sSettings);
 
 	var config = {
 		type		: 'web',
@@ -25,53 +46,15 @@ jQuery(function($){
 	var cursor=0;
 	var sttngs={};
 
-	var i18n={
-		'ru':{
-			viewha_trn: '&#8592; [вьюха]',
-			navMenu: 'Меню',
-			cnclSrcSite: 'Отменить поиск по сайту',
-			entrYInqH: 'Сюда введите свой запрос',
-			inpSrcQr: 'Поле ввода запроса для поиска',
-			delSrcQr: 'Удалить поисковый запрос',
-			srcButton: 'Кнопка поиска',
-			goViewUp: 'Наверх к первому результату поиска',
-			notFound: 'Ничего не найдено!',
-			searchThisSite: 'Поиск по сайту:',
-			searchThisSiteM: 'искать на этом сайте',
-			searchMapSiteM: 'искать на карте',
-			helpSrcYFocusY: 'нажмите клавишу "Enter &#x23ce;" или синюю кнопку со стрелкой ">", для поиска по запросу',
-			helpSrcYFocusN: 'нажмите синюю кнопку со стрелкой ">", для поиска по запросу',
-			helpSrcNFocusY1: '(1) - сформулируйте свой запрос и введите сюда',
-			helpSrcNFocusY2: '(2) - нажмите синюю кнопку со стрелкой ">" для поиска по запросу или клавишу "Enter &#x23ce;"',
-			helpSrcNFocusN: 'нажмите на строку поиска и введите сюда свой запрос',
-			otherSrcEng: 'В других поисковиках:'
-		},
-		'en':{
-			viewha_trn: '&#8592; [vjuːha]',
-			navMenu: 'Menu',
-			cnclSrcSite: 'Cancel Search Site',
-			entrYInqH: 'Enter your inquiry here',
-			inpSrcQr: 'The input field for the search query',
-			delSrcQr: 'To delete a search query',
-			srcButton: 'Search button',
-			goViewUp: 'Up to the first search result',
-			notFound: 'No Results Were Found!',
-			searchThisSite: 'Search this site:',
-			searchThisSiteM: 'search this site',
-			searchMapSiteM: 'search on the map',
-			helpSrcYFocusY: 'press "Enter &#x23ce;" or the blue arrow button ">" to search for on request',
-			helpSrcYFocusN: 'click the blue arrow button ">" to search for on request',
-			helpSrcNFocusY1: '(1) - specify your request and enter here',
-			helpSrcNFocusY2: '(2) - press the blue arrow button ">" to search for on-demand, or press "Enter &#x23ce;"',
-			helpSrcNFocusN: 'click on the search bar and enter your query here',
-			otherSrcEng: 'In other search engines:'
-		}
-	};
-
 	function drawMap(idObj,c_lat,c_lng) {
 		var cmAttr = '',
+			cmUrl = '';
+
+		if(sSettings.styleMap=='dark') {
+			cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+		} else if(sSettings.styleMap=='light') {
 			cmUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
-			//cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+		}
 
 		var midnight  = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr});
 
@@ -92,9 +75,10 @@ jQuery(function($){
 	}
 
 	function googleMap(qre) {
+		if(sSettings.searchType.map) {
 		var resultsDiv = $('#resultsDiv');
 		var apiURL = 'https://maps.googleapis.com/maps/api/geocode/json';
-		$.getJSON(apiURL,{address:qre,language:lang,sensor:false},function(r){
+		$.getJSON(apiURL,{address:qre,language:sSettings.lang,sensor:false},function(r){
 			if(r.status=="OK") {
 				var rsl=r.results;
 
@@ -108,7 +92,11 @@ jQuery(function($){
 				if($("#thelist").length) {
 					pageContainer = $('#thelist');
 				} else {
-					pageContainer = $('<ul>',{id:'thelist',class:'pageContainer'});
+					var classViewResSearch='pageContainer';
+					if(sSettings.vTileList=='list') {
+						classViewResSearch+=' reSline';
+					}
+					pageContainer = $('<ul>',{id:'thelist',class:classViewResSearch});
 				}
 				
 				pageContainer.appendTo(resultsDiv);
@@ -129,7 +117,7 @@ jQuery(function($){
 					htmlEndForm+='<div class="markerResSrc"><i class="icon-map-marker icon-2x"></i></div>';
 					htmlEndForm+='<img src="http://www.openstreetmap.org/favicon.ico" class="ico">';
 					htmlEndForm+='<p>'+oner.formatted_address+'</p>';
-					htmlEndForm+='<div class="srcThisSite" gourl="" original-title="<font class=\'fs15\'>'+i18n[lang].searchMapSiteM+'</font>">'+'&#8250;'+'</div>';
+					htmlEndForm+='<div class="srcThisSite" gourl="" original-title="<font class=\'fs15\'>'+i18n[sSettings.lang].searchMapSiteM+'</font>">'+'&#8250;'+'</div>';
 					htmlEndForm+='</div>';
 					htmlEndForm+='</div></div>';
 					htmlEndForm+='</li>';
@@ -143,7 +131,7 @@ jQuery(function($){
 						$('<div>',{id:'map_full',class:'',style:'width:100%;height:100%;position:fixed;top:0;left:0;'}).appendTo($('#page'));
 						resultsDiv.empty();
 						console.log("goSiteUrl=Map");
-						$("#leftSrcTrg_ico").html('<img src="http://www.openstreetmap.org/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[lang].searchThisSite+' Map">');
+						$("#leftSrcTrg_ico").html('<img src="http://www.openstreetmap.org/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[sSettings.lang].searchThisSite+' Map">');
 						sttngs.siteURL='#map';
 
 						drawMap('map_full',oner.geometry.location.lat, oner.geometry.location.lng);
@@ -174,6 +162,7 @@ jQuery(function($){
 				
 			}
 		});
+		}
 	}
 	
 	
@@ -194,7 +183,11 @@ jQuery(function($){
 
 		sttngs=settings;
 
-		var typeGglQ=["web", "images","news","video"];
+		var typeGglQ=[];
+		if(sSettings.searchType.web) typeGglQ.push('web');
+		if(sSettings.searchType.img) typeGglQ.push('images');
+		if(sSettings.searchType.news) typeGglQ.push('news');
+		if(sSettings.searchType.video) typeGglQ.push('video');
 
 		for(var istpGQ in typeGglQ) {
 
@@ -219,7 +212,11 @@ jQuery(function($){
 				if($("#thelist").length) {
 					pageContainer = $('#thelist');
 				} else {
-					pageContainer = $('<ul>',{id:'thelist',class:'pageContainer'});
+					var classViewResSearch='pageContainer';
+					if(sSettings.vTileList=='list') {
+						classViewResSearch+=' reSline';
+					}
+					pageContainer = $('<ul>',{id:'thelist',class:classViewResSearch});
 				}
 				
 				for(var i=0;i<results.length;i++){
@@ -242,7 +239,7 @@ jQuery(function($){
 					//el.tipsy({live:true,html:true, gravity:'se', delayIn:700, delayOut:200});
 					var goSiteUrl=el.attr('gourl');
 					console.log("goSiteUrl="+goSiteUrl);
-					$("#leftSrcTrg_ico").html('<img src="http://'+goSiteUrl+'/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[lang].searchThisSite+' '+goSiteUrl+'">');
+					$("#leftSrcTrg_ico").html('<img src="http://'+goSiteUrl+'/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[sSettings.lang].searchThisSite+' '+goSiteUrl+'">');
 					goSearch({siteURL:goSiteUrl});
 					return false;
 				});
@@ -287,7 +284,7 @@ jQuery(function($){
 				// FIXME: vvv
 				/*sourceResData=false;
 				resultsDiv.empty();
-				$('<p>',{class:'notFound',html:i18n[lang].notFound}).hide().appendTo(resultsDiv).fadeIn();*/
+				$('<p>',{class:'notFound',html:i18n[sSettings.lang].notFound}).hide().appendTo(resultsDiv).fadeIn();*/
 			}
 			}
 		});
@@ -297,7 +294,7 @@ jQuery(function($){
 	function result_end(){
 		if(!sourceResDataEnd) {
 			var htmlEndForm='<li class="webResult" gourl="" style="cursor:default;"><div class="cntnt" style="padding:10px;">';
-			htmlEndForm+='<h2>'+i18n[lang].otherSrcEng+'</h2>';
+			htmlEndForm+='<h2>'+i18n[sSettings.lang].otherSrcEng+'</h2>';
 			htmlEndForm+='<a href="https://www.google.com/search?q='+$('#s').val()+'" target="_blank" style="font-size:15px;"><img src="https://www.google.com/favicon.ico" class="ico" style="margin: 0 15px;"> Google</a><br /><br />';
 			htmlEndForm+='<a href="http://www.yandex.com/yandsearch?text='+$('#s').val()+'" target="_blank" style="font-size:15px;"><img src="http://www.yandex.ru/favicon.ico" class="ico" style="margin: 0 15px;"> Yandex</a><br /><br />';
 			htmlEndForm+='<a href="http://www.bing.com/search?q='+$('#s').val()+'" target="_blank" style="font-size:15px;"><img src="http://www.bing.com/favicon.ico" class="ico" style="margin: 0 15px;"> Bing</a><br /><br />';
@@ -327,7 +324,7 @@ jQuery(function($){
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
-					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
+					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
 					'</div>',
@@ -346,7 +343,7 @@ jQuery(function($){
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.visibleUrl,'</a>',
-					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
+					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
 					'</div>',
@@ -377,7 +374,7 @@ jQuery(function($){
 					'<h2>',r.videoType,'</h2>',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.publisher,'</a>',
-					'<div class="srcThisSite" gourl="',r.publisher,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
+					'<div class="srcThisSite" gourl="',r.publisher,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
 					'</div>',
@@ -397,7 +394,7 @@ jQuery(function($){
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.publisher,'</a>',
-					'<div class="srcThisSite" gourl="',hostU,'" original-title="','<font class=\'fs15\'>'+i18n[lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
+					'<div class="srcThisSite" gourl="',hostU,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
 					'</div>',
@@ -442,16 +439,25 @@ jQuery(function($){
 			viewTypeData=true;
 			hideHelp();
 
-			/*var dSsiteURL=false;
+			window.location.hash = "q="+$('#s').val();
+
+			var dSsiteURL=false;
 			if(dataSearch) {
 				if(dataSearch.siteURL!='#map' & dataSearch.siteURL!='' & dataSearch.siteURL!="" & dataSearch.siteURL!=undefined) {
 					dSsiteURL=true;
 				}
 			}
 			if((sttngs.siteURL!='#map' & sttngs.siteURL!='' & sttngs.siteURL!="" & sttngs.siteURL!=undefined) | dSsiteURL) {
-			} else {*/
-				googleMap($('#s').val());
-			//}
+				window.location.hash = "q="+$('#s').val()+":site="+dataSearch.siteURL;
+			} else {
+				if(sttngs.siteURL=='#map') {
+					window.location.hash = "q="+$('#s').val()+":site=map";
+				} else {
+					//window.location.hash = "q="+$('#s').val()+":site?="+dataSearch.siteURL;
+				}
+			}
+			
+			googleMap($('#s').val());
 
 			if(sttngs.siteURL!='#map') {
 				googleSearch(dataSearch);
@@ -501,7 +507,17 @@ jQuery(function($){
 		return ret_lng;
 	}
 
-	lang=lng();
+	if(sSettings.lang=='') {
+		sSettings.lang=lng();
+		$.cookie('vhSettings',JSON.stringify(sSettings));
+	}
+
+	if(sSettings.firstStrt==0) {
+		sSettings.firstStrt=(new Date()).getTime();
+		$.cookie('vhSettings',JSON.stringify(sSettings));
+	}
+
+	
 
 	setInterval(function(){
 		if(!viewTypeData & !helpViewUsr) {
@@ -516,12 +532,12 @@ jQuery(function($){
 					$('.autocompl').hide('slow');
 					if(srcLineFocus) {
 						// предлогаем нажать клавишу enter или по синей кнопке со стрелочкой ">"
-						$('.help_right small').html(i18n[lang].helpSrcYFocusY);
+						$('.help_right small').html(i18n[sSettings.lang].helpSrcYFocusY);
 						$('.help_right p').show("slow");
 						$('.help_right small').show("slow");
 					} else {
 						// предлогаем нажать по синей кнопке со стрелочкой ">"
-						$('.help_right small').html(i18n[lang].helpSrcYFocusN);
+						$('.help_right small').html(i18n[sSettings.lang].helpSrcYFocusN);
 						$('.help_right p').show("slow");
 						$('.help_right small').show("slow");
 					}
@@ -529,8 +545,8 @@ jQuery(function($){
 					// Не ввели ни чего
 					if(srcLineFocus) {
 						// предлогаем набрать текст запроса
-						$('.help_left small').html(i18n[lang].helpSrcNFocusY1);
-						$('.help_right small').html(i18n[lang].helpSrcNFocusY2);
+						$('.help_left small').html(i18n[sSettings.lang].helpSrcNFocusY1);
+						$('.help_right small').html(i18n[sSettings.lang].helpSrcNFocusY2);
 						$('.help_left p').show("slow");
 						$('.help_left small').show("slow",function(){
 							$('.help_right p').show("slow");
@@ -538,7 +554,7 @@ jQuery(function($){
 						});
 					} else {
 						// предлогаем нажать на строку поиска и набрать текст
-						$('.help_left small').html(i18n[lang].helpSrcNFocusN);
+						$('.help_left small').html(i18n[sSettings.lang].helpSrcNFocusN);
 						$('.help_left p').show("slow");
 						$('.help_left small').show("slow");
 					}
@@ -592,7 +608,7 @@ jQuery(function($){
 				dataType: 'jsonp',
 				data: {
 					output: 'firefox',
-					hl: lang,
+					hl: sSettings.lang,
 					q: $('#s').val()
 				},
 				success: function(obj) {
@@ -714,6 +730,7 @@ jQuery(function($){
 	});
 
 	$('#clearButton').click(function(){
+		window.location.hash = '';
 		$('#resultsDiv').html('');
 		$('#clearButton').css('display','none');
 		$('#resView-button').css('display','none');
@@ -744,17 +761,26 @@ jQuery(function($){
 		if($('#thelist').hasClass('reSline')) {
 			$('#thelist').removeClass("reSline");
 			$('#resView-button').html('<i class="icon-th-list icon-2x"></i>');
+			$('#resView-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewList+'</font>');
+			sSettings.vTileList='tile';
 		} else {
 			$('#thelist').addClass("reSline");
 			$('#resView-button').html('<i class="icon-th icon-2x"></i>');
+			$('#resView-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewTile+'</font>');
+			sSettings.vTileList='list';
 		}
+		$.cookie('vhSettings',JSON.stringify(sSettings));
 	});
-	if($('#thelist').hasClass('reSline')) {
+	if(sSettings.vTileList=='list') {
+		$('#thelist').removeClass("reSline").addClass("reSline");
 		$('#resView-button').html('<i class="icon-th icon-2x"></i>');
-	} else {
+		$('#resView-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewTile+'</font>');
+	} else if(sSettings.vTileList=='tile') {
+		$('#thelist').removeClass("reSline");
 		$('#resView-button').html('<i class="icon-th-list icon-2x"></i>');
+		$('#resView-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewList+'</font>');
 	}
-
+	
 
 	// parse url path..
 	var prmstr = window.location.search.substr(1);
@@ -767,35 +793,38 @@ jQuery(function($){
 	}
 
 	if(params.l) {
-		lang=lng(params.l);
+		sSettings.lang=lng(params.l);
+		$.cookie('vhSettings',JSON.stringify(sSettings));
 	}
 
 	
-	$('#logosrch small').html(i18n[lang].viewha_trn);
-	$('#s').attr('placeholder',i18n[lang].entrYInqH);
+	$('#logosrch small').html(i18n[sSettings.lang].viewha_trn);
+	$('#s').attr('placeholder',i18n[sSettings.lang].entrYInqH);
 
-	$('#s').attr('original-title','<font class="fs15">'+i18n[lang].inpSrcQr+'</font>');
+	$('#s').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].inpSrcQr+'</font>');
 	$('#s').tipsy({html:true, gravity:'n', delayIn:700, delayOut:200});
 
-	$('#leftSrcTrg_close').attr('original-title','<font class="fs15">'+i18n[lang].cnclSrcSite+'</font>');
+	$('#leftSrcTrg_close').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].cnclSrcSite+'</font>');
 	$('#leftSrcTrg_close').tipsy({html:true, gravity:'nw', delayIn:700, delayOut:200});
 
-	$('#nav-button').attr('original-title','<font class="fs15">'+i18n[lang].navMenu+'</font>');
+	$('#nav-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].navMenu+'</font>');
 	$('#nav-button').tipsy({html:true, gravity:'nw', delayIn:700, delayOut:200});
 
-	$('#clearButton').attr('original-title','<font class="fs15">'+i18n[lang].delSrcQr+'</font>');
+	$('#clearButton').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].delSrcQr+'</font>');
 	$('#clearButton').tipsy({html:true, gravity:'ne', delayIn:700, delayOut:200});
 
-	$('#submitButton').attr('original-title','<font class="fs15">'+i18n[lang].srcButton+'</font>');
+	$('#submitButton').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].srcButton+'</font>');
 	$('#submitButton').tipsy({html:true, gravity:'ne', delayIn:700, delayOut:200});
 
-	$('#goToUp').attr('original-title','<font class="fs15">'+i18n[lang].goViewUp+'</font>');
+	$('#goToUp').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].goViewUp+'</font>');
 	$('#goToUp').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
+
+	$('#resView-button').tipsy({html:true, gravity:'ne', delayIn:700, delayOut:200});
 	
 	if(params.q) {
 		$("#s").val(decodeURIComponent(params.q));
 		if(params.site) {
-			$("#leftSrcTrg_ico").html('<img src="http://'+params.site+'/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[lang].searchThisSite+' '+params.site+'">');
+			$("#leftSrcTrg_ico").html('<img src="http://'+params.site+'/favicon.ico" class="ico" style="margin:4px 2px;" title="'+i18n[sSettings.lang].searchThisSite+' '+params.site+'">');
 			goSearch({siteURL:params.site});
 		} else {
 			goSearch();
