@@ -45,6 +45,10 @@ h1 small {
   left: 0;
 }
 
+#backgroundfont.light {
+  background: #f1f1f1;
+}
+
 .container { 
   margin: 0 auto; 
 }
@@ -249,6 +253,10 @@ h2.help_right small {
   -moz-border-radius: 4px 0 0 4px;
   border-radius: 4px 0 0 4px;
 }
+#leftSrcTrg.light {
+  border: 2px solid #000;
+  border-right: none;
+}
 
 #leftSrcTrg_ico {
   opacity: 1;
@@ -289,18 +297,62 @@ h2.help_right small {
   color: #fff;
 }
 
-#resView-button {
-  display:none;
+.resView {
+  float: left;
+  padding: 15px 0px 0px 15px;
+}
+
+.resView.actv {
+  /*display:none;
   position: relative;
   z-index: 2000;
   top: 10px;
-  left: 10px;
+  left: 10px;*/
   cursor: pointer;
   color: #999;
 }
 
-#resView-button:hover {
+.resView-button.actv:hover {
   color: #fff;
+}
+
+.nav-up, .nav-menu {
+  width: 200px;
+  height: 30px;
+}
+
+.nav-list-button {
+  padding: 10px;
+  margin-left: 0;
+  margin-bottom: 20px;
+  list-style: none;
+}
+.nav-list-button > li {
+  display: block;
+  float: none;
+  cursor: pointer;
+  line-height: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 12px;
+  padding-left: 12px;
+  margin-top: 2px;
+  margin-bottom: 3px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin-right: 0;
+  border: 1px solid #222222 !important;
+  color: #ccc;
+}
+.nav-list-button > li:hover, .nav-list-button li.active {
+  text-decoration: none;
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+.nav-down {
+  color:#999;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);position:absolute;bottom:0;font-size:10px;margin-left:10px;
 }
 
 #page{
@@ -308,7 +360,7 @@ h2.help_right small {
   overflow-x: hidden;
   overflow-y: auto;
   z-index: 9;
-  padding: 0 10px;
+  padding: 0 0 0 10px;
   position: relative;
 }
 
@@ -359,6 +411,9 @@ h2.help_right small {
   opacity: .6;
   z-index: 2010;
 }
+.searchForm-shadow.light {
+  background-color: #f1f1f1;
+}
 #searchForm.cn .searchForm-shadow {
   width: 564px;
 }
@@ -371,6 +426,10 @@ h2.help_right small {
 
 #logosrch {
   text-shadow: 0 0 2px #1f1f1f;
+}
+#logosrch.light {
+  color: #444;
+  text-shadow: 0 0 2px #f1f1f1;
 }
 
 #clearButton {
@@ -388,6 +447,11 @@ h2.help_right small {
   border-right: none;
   cursor: pointer;
   line-height: 1;
+}
+#clearButton.light {
+  border: 2px solid #000;
+  border-left: none;
+  border-right: none;
 }
 
 #clearButton:hover {
@@ -418,7 +482,13 @@ h2.help_right small {
   border: 2px solid #fff;
   border-left: none;
 }
+#submitButton.light {
+  border: 2px solid #000;
+  border-left: none;
+  color: #000;
+}
 #submitButton:hover {
+  color: #fff;
   background-color: #006dcc;
   *background-color: #0044cc;
   background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
@@ -447,6 +517,12 @@ h2.help_right small {
   outline:medium none;
   padding:0;
   width:500px;
+}
+#s.light {
+  border: 2px solid #000;
+  border-left: none;  
+  border-right: none;
+  color:#444;
 }
 
 .autocompl {
@@ -542,7 +618,7 @@ h2.help_right small {
 .srcThisSite {
   display: none;
   margin: 0;
-  color: #ffffff;
+  color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-repeat: repeat-x;
   border-color: #0044cc #0044cc #002a80;
@@ -567,7 +643,9 @@ h2.help_right small {
   height: 23px;
   text-align: center;
 }
+
 .srcThisSite:hover {
+  color: #fff;
   background-color: #006dcc;
   *background-color: #0044cc;
   background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
@@ -644,6 +722,44 @@ a:hover{
   left: 0;
   display:none;
 }
+#blackfonscreen.zIdx3000 {
+  z-index:3000;
+}
+
+#winModal {
+  display: none;
+  z-index: 3010;width: 100%;height: 100%;position: absolute;
+}
+#winModal .win {
+  min-width: 360px; max-width: 600px; height: 50%; margin: 0 auto; background-color: #333; margin-top: 10%; overflow: hidden; padding: 10px; position: relative;
+}
+#winModalBody {
+  overflow-x: hidden;overflow-y: auto;width: 100%;height: 100%; background-color:#1f1f1f;
+}
+#winModalDown {
+  height: 30px;position: fixed;margin-left: 30px;
+}
+/*#winModal_close {*/
+button {
+  display: block;
+  float: none;
+  cursor: pointer;
+  line-height: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-right: 12px;
+  padding-left: 12px;
+  margin-top: 2px;
+  margin-bottom: 3px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin-right: 0;
+  border: 1px solid #333 !important;
+  color: #ccc;
+  background-color: #333;
+}
+
 
 font.fs15{
   font-size:15px;

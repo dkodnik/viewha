@@ -8,7 +8,7 @@ jQuery(function($){
 	// настройки котороые будут сохранены в браузере (cookie)
 	var sSettings ={
 		lang: '', // язык en|ru
-		vHelp: true, // показывать подсказки
+		vHelp: 'yes', // показывать подсказки
 		firstStrt: 0, // дата первого запуска
 		vTileList: 'tile', // представление результат: плитка(tile) или список(list)
 		style: 'dark', // стиль темный(dark) или светлый(light)
@@ -25,7 +25,18 @@ jQuery(function($){
 	if($.cookie('vhSettings')) {
 		sSettings = JSON.parse($.cookie('vhSettings'));
 	}
-	console.log(sSettings);
+
+	if(sSettings.style=='light') {
+		/*$('#blackfonscreen').css('background-color','#fff');*/
+		$('#goToUp').css('color','#444');
+		$('#backgroundfont').addClass('light');
+		$('#logosrch').addClass('light');
+		$('.searchForm-shadow').addClass('light');
+		$('#leftSrcTrg').addClass('light');
+		$('#clearButton').addClass('light');
+		$('#submitButton').addClass('light');
+		$('#s').addClass('light');
+	}
 
 	var config = {
 		type		: 'web',
@@ -45,6 +56,8 @@ jQuery(function($){
 
 	var cursor=0;
 	var sttngs={};
+
+	/* ==================== START FUNCTIONS ===================== */
 
 	function drawMap(idObj,c_lat,c_lng) {
 		var cmAttr = '',
@@ -434,7 +447,6 @@ jQuery(function($){
 			$('#resultsDiv').html('');
 			$('#searchForm').removeClass('cn fix').addClass('fix');
 			$('#clearButton').css('display','block');
-			$('#resView-button').css('display','block');
 			$("#logosrch").css('display','none');
 			viewTypeData=true;
 			hideHelp();
@@ -474,10 +486,14 @@ jQuery(function($){
 		$('.help_right small').hide();
 
 		$('#blackfonscreen').hide();
+		/*
+		-----------------------------------------
+		FIXME: прикрыл временно для дебага
+		-----------------------------------------
 		if(viewTypeData) {
 			$('#blackfonscreen').css('z-index','1050');
 			$('#thelist li').css('z-index','10');
-		}
+		}*/
 	}
 
 	function getLocale() {
@@ -507,6 +523,24 @@ jQuery(function($){
 		return ret_lng;
 	}
 
+	function showModalWin(htmlBody) {
+		$('#winModalBody').html(htmlBody);
+		$('#blackfonscreen').show();
+		$('#blackfonscreen').removeClass('zIdx3000').addClass('zIdx3000');
+		$('#winModal').show();
+	}
+
+	function hideModalWin() {
+		$('#winModal').hide();
+		$('#winModalBody').html('');
+		$('#blackfonscreen').hide();
+		$('#blackfonscreen').removeClass('zIdx3000');
+	}
+
+	/* ==================== END FUNCTIONS ===================== */
+
+
+
 	if(sSettings.lang=='') {
 		sSettings.lang=lng();
 		$.cookie('vhSettings',JSON.stringify(sSettings));
@@ -516,6 +550,126 @@ jQuery(function($){
 		sSettings.firstStrt=(new Date()).getTime();
 		$.cookie('vhSettings',JSON.stringify(sSettings));
 	}
+
+	var btnSettings = $('<li>');
+	btnSettings.html('<i class="icon-cogs"></i> '+i18n[sSettings.lang].settings);
+	btnSettings.click(function(){
+
+		showModalWin(
+			'<div id="pageViewStngs" style="padding:20px;">'+
+			'<h2>'+i18n[sSettings.lang].stngSearch+'</h2>'+
+			'<hr>'+
+			''+i18n[sSettings.lang].helpingView+': '+
+			'<input type="radio" name="helpingsite" value="yes"> '+i18n[sSettings.lang].yes+
+			'<input type="radio" name="helpingsite" value="no"> '+i18n[sSettings.lang].no+
+			'<br>'+'<br>'+
+			''+i18n[sSettings.lang].styleSite+': '+
+			'<input type="radio" name="stylesite" value="dark"> '+i18n[sSettings.lang].dark+
+			'<input type="radio" name="stylesite" value="light"> '+i18n[sSettings.lang].light+
+			'<br>'+'<br>'+
+			''+i18n[sSettings.lang].styleMap+': '+
+			'<input type="radio" name="stylemap" value="dark"> '+i18n[sSettings.lang].dark+
+			'<input type="radio" name="stylemap" value="light"> '+i18n[sSettings.lang].light+
+			'<br>'+'<br>'+
+			''+i18n[sSettings.lang].whereToLook+': <br>'+
+			'<input id="stW" type="checkbox" name="first1" /> '+i18n[sSettings.lang].sites+'<br>'+
+			'<input id="stI" type="checkbox" name="first2" /> '+i18n[sSettings.lang].images+'<br>'+
+			'<input id="stN" type="checkbox" name="first3" /> '+i18n[sSettings.lang].news+'<br>'+
+			'<input id="stV" type="checkbox" name="first4" /> '+i18n[sSettings.lang].video+'<br>'+
+			'<input id="stM" type="checkbox" name="first5" /> '+i18n[sSettings.lang].map+'<br>'+
+			'<br>'+'<br>'+
+			''+i18n[sSettings.lang].urlImgBack+': <br>'+
+			'<input type="text" id="urlPhonsImg" size="40" disabled style="background-color:#999;">'+
+			'<br>'+'<br>'+
+			'<button id="saveSettings">'+i18n[sSettings.lang].save+'</button>'+
+			'</div>'
+		);
+		
+		if(sSettings.vHelp=='yes') {
+			$('#pageViewStngs input:radio[name="helpingsite"][value=' + 'yes' + ']').attr('checked', 'checked');
+		} else if(sSettings.vHelp=='no') {
+			$('#pageViewStngs input:radio[name="helpingsite"][value=' + 'no' + ']').attr('checked', 'checked');
+		}
+
+		if(sSettings.style=='dark') {
+			$('#pageViewStngs input:radio[name="stylesite"][value=' + 'dark' + ']').attr('checked', 'checked');
+		} else if(sSettings.style=='light') {
+			$('#pageViewStngs input:radio[name="stylesite"][value=' + 'light' + ']').attr('checked', 'checked');
+		}
+		if(sSettings.styleMap=='dark') {
+			$('#pageViewStngs input:radio[name="stylemap"][value=' + 'dark' + ']').attr('checked', 'checked');
+		} else if(sSettings.styleMap=='light') {
+			$('#pageViewStngs input:radio[name="stylemap"][value=' + 'light' + ']').attr('checked', 'checked');
+		}
+
+		if(sSettings.searchType.web) $('#stW').attr('checked','checked');
+		if(sSettings.searchType.img) $('#stI').attr('checked','checked');
+		if(sSettings.searchType.news) $('#stN').attr('checked','checked');
+		if(sSettings.searchType.video) $('#stV').attr('checked','checked');
+		if(sSettings.searchType.map) $('#stM').attr('checked','checked');
+
+		if(sSettings.urlBckgrndImg.length>0) {
+			$('#urlPhonsImg').val(sSettings.urlBckgrndImg);
+		}
+		
+		$('#saveSettings').click(function(){
+			var radioHelp=$('#pageViewStngs input:radio[name="helpingsite"]:checked');
+			for(var i=0; i<radioHelp.length;i++) {
+				var typeHlp=radioHelp[i].value;
+				if(typeHlp=='yes') {
+					sSettings.vHelp='yes';
+				} else if(typeHlp=='no') {
+					sSettings.vHelp='no';
+				}
+			}
+			var radioSite=$('#pageViewStngs input:radio[name="stylesite"]:checked');
+			for(var i=0; i<radioSite.length;i++) {
+				var typeStl=radioSite[i].value;
+				if(typeStl=='dark') {
+					sSettings.style='dark';
+				} else if(typeStl=='light') {
+					sSettings.style='light';
+				}
+			}
+			var radioMap=$('#pageViewStngs input:radio[name="stylemap"]:checked');
+			for(var i=0; i<radioMap.length;i++) {
+				var typeMap=radioMap[i].value;
+				if(typeMap=='dark') {
+					sSettings.styleMap='dark';
+				} else if(typeMap=='light') {
+					sSettings.styleMap='light';
+				}
+			}
+			sSettings.searchType.web=false;
+			sSettings.searchType.img=false;
+			sSettings.searchType.news=false;
+			sSettings.searchType.video=false;
+			sSettings.searchType.map=false;
+			var checkboxSearch=$('#pageViewStngs input:checkbox:checked');
+			for(var i=0; i<checkboxSearch.length;i++) {
+				var idCh=$(checkboxSearch[i]).attr('id');
+				if(idCh=='stW') {sSettings.searchType.web=true;}
+				if(idCh=='stI') {sSettings.searchType.img=true;}
+				if(idCh=='stN') {sSettings.searchType.news=true;}
+				if(idCh=='stV') {sSettings.searchType.video=true;}
+				if(idCh=='stM') {sSettings.searchType.map=true;}
+			}
+			
+			if($('#urlPhonsImg').val().length>0) {
+				sSettings.urlBckgrndImg=$('#urlPhonsImg').val();
+			}
+			$.cookie('vhSettings',JSON.stringify(sSettings));
+			window.location.reload();
+		});
+	});
+	btnSettings.appendTo($('.nav-list-button'));
+
+	var btnPrivacy = $('<li>');
+	btnPrivacy.html('<i class="icon-book"></i> '+i18n[sSettings.lang].terms);
+	btnPrivacy.click(function(){
+		showModalWin('СКОРО....');
+	});
+	btnPrivacy.appendTo($('.nav-list-button'));
 
 	
 
@@ -680,6 +834,10 @@ jQuery(function($){
         }, 800);
 	});
 
+	$('#winModal_close').click(function(){
+		hideModalWin();
+	});
+
 	$('#page').mouseup(function(){
 		hideHelp();
 	});
@@ -733,7 +891,6 @@ jQuery(function($){
 		window.location.hash = '';
 		$('#resultsDiv').html('');
 		$('#clearButton').css('display','none');
-		$('#resView-button').css('display','none');
 		$("#s").val('');
 		$("#logosrch").css('display','block');
 		$('#searchForm').removeClass('cn fix').addClass('cn');
@@ -748,37 +905,47 @@ jQuery(function($){
 			$('#layer-body').animate({'margin-left': '0px'}, 500, 'linear', function() {
 				$('#layer-body').removeClass('viewMenu');
 			});
+			if(sttngs.siteURL=='#map') {
+				$("#map_full").animate({'margin-left': '0px'}, 500, 'linear');				
+			}
 		} else {
 			$('#layer-body').animate({'margin-left': '200px'}, 500, 'linear', function() {
 				$('#layer-body').addClass('viewMenu');
 			});
+			if(sttngs.siteURL=='#map') {
+				$("#map_full").animate({'margin-left': '200px'}, 500, 'linear');				
+			}
 		}
 		
 	});
 
 	// кнопка представления результата поиска (плитка или лист)
-	$('#resView-button').click(function(){
-		if($('#thelist').hasClass('reSline')) {
-			$('#thelist').removeClass("reSline");
-			$('#resView-button').html('<i class="icon-th-list icon-2x"></i>');
-			$('#resView-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewList+'</font>');
-			sSettings.vTileList='tile';
-		} else {
-			$('#thelist').addClass("reSline");
-			$('#resView-button').html('<i class="icon-th icon-2x"></i>');
-			$('#resView-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewTile+'</font>');
-			sSettings.vTileList='list';
-		}
+	$('#resViewT-button').click(function(){
+		$('#resViewL-button').addClass('actv');
+		$('#resViewT-button').removeClass('actv');
+		$('#thelist').removeClass("reSline");
+		sSettings.vTileList='tile';
 		$.cookie('vhSettings',JSON.stringify(sSettings));
 	});
+	$('#resViewL-button').click(function(){
+		$('#resViewL-button').removeClass('actv');
+		$('#resViewT-button').addClass('actv');
+		$('#thelist').addClass("reSline");
+		sSettings.vTileList='list';
+		$.cookie('vhSettings',JSON.stringify(sSettings));
+	});
+	$('#resViewT-button').html('<i class="icon-th icon-2x"></i>');
+	$('#resViewT-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewTile+'</font>');
+	$('#resViewL-button').html('<i class="icon-th-list icon-2x"></i>');
+	$('#resViewL-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewList+'</font>');
 	if(sSettings.vTileList=='list') {
 		$('#thelist').removeClass("reSline").addClass("reSline");
-		$('#resView-button').html('<i class="icon-th icon-2x"></i>');
-		$('#resView-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewTile+'</font>');
+		$('#resViewL-button').removeClass('actv');
+		$('#resViewT-button').addClass('actv');
 	} else if(sSettings.vTileList=='tile') {
 		$('#thelist').removeClass("reSline");
-		$('#resView-button').html('<i class="icon-th-list icon-2x"></i>');
-		$('#resView-button').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].resViewList+'</font>');
+		$('#resViewL-button').addClass('actv');
+		$('#resViewT-button').removeClass('actv');
 	}
 	
 
@@ -797,6 +964,11 @@ jQuery(function($){
 		$.cookie('vhSettings',JSON.stringify(sSettings));
 	}
 
+
+	/* ==================== START I18N ===================== */
+
+	
+	$('#winModal_close').html('<i class="icon-remove"></i> '+i18n[sSettings.lang].close);
 	
 	$('#logosrch small').html(i18n[sSettings.lang].viewha_trn);
 	$('#s').attr('placeholder',i18n[sSettings.lang].entrYInqH);
@@ -819,7 +991,10 @@ jQuery(function($){
 	$('#goToUp').attr('original-title','<font class="fs15">'+i18n[sSettings.lang].goViewUp+'</font>');
 	$('#goToUp').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
 
-	$('#resView-button').tipsy({html:true, gravity:'ne', delayIn:700, delayOut:200});
+	$('#resViewT-button').tipsy({html:true, gravity:'nw', delayIn:700, delayOut:200});
+	$('#resViewL-button').tipsy({html:true, gravity:'nw', delayIn:700, delayOut:200});
+
+	/* ==================== END I18N ===================== */
 	
 	if(params.q) {
 		$("#s").val(decodeURIComponent(params.q));

@@ -23,10 +23,26 @@
 
 <div id="blackfonscreen"></div>
 
+<div id="winModal">
+  <div class="win">
+    <div id="winModalBody"></div>
+    <div id="winModalDown">
+    	<button id="winModal_close"></button>
+    </div>
+  </div>
+ </div>
+
 <div id="layer-nav">
-	<div class="nav-down" style="color:#999;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);position:absolute;bottom:0;font-size:10px;margin-left:10px;">
+	<div class="nav-up">
+		<div id="resViewT-button" class="resView"></div>
+		<div id="resViewL-button" class="resView"></div>
+	</div>
+	<div class="nav-menu">
+		<ul class="nav-list-button"></ul>
+	</div>
+	<div class="nav-down">
 		<p>Powered by <b>Google</b></p>
-		<p>Version 0.1.26 <a href="https://github.com/dkodnik/viewha" target="_blank"><i class="icon-github"></i> GitHub</a></p>
+		<p>Version 0.1.27 <a href="https://github.com/dkodnik/viewha" target="_blank"><i class="icon-github"></i> GitHub</a></p>
 	</div>
 </div>
 
@@ -43,7 +59,6 @@
            	<p id="clearButton" title=""><i class="icon-remove-circle"></i></p>
             <input type="submit" value="&#8250;" id="submitButton" title="">
             </div>
-            <div id="resView-button"></div>
         </fieldset>
 
         <div class="autocompl"><ul id="hlpCompl"></ul></div>
