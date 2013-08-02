@@ -29,7 +29,7 @@ jQuery(function($){
 	if(sSettings.style=='light') {
 		/*$('#blackfonscreen').css('background-color','#fff');*/
 		$('#goToUp').css('color','#444');
-		$('#backgroundfont').addClass('light');
+		$('#backgroundfont1').addClass('light');
 		$('#logosrch').addClass('light');
 		$('.searchForm-shadow').addClass('light');
 		$('#leftSrcTrg').addClass('light');
@@ -549,6 +549,13 @@ jQuery(function($){
 	if(sSettings.firstStrt==0) {
 		sSettings.firstStrt=(new Date()).getTime();
 		$.cookie('vhSettings',JSON.stringify(sSettings));
+	} else {
+		var nowDate=(new Date()).getTime();
+		// Отключаем подсказки, когда больше 3 дней используется
+		if((sSettings.firstStrt+3600*24*3)<nowDate) {
+			sSettings.vHelp='no';
+			$.cookie('vhSettings',JSON.stringify(sSettings));
+		}
 	}
 
 	var btnSettings = $('<li>');
@@ -559,6 +566,12 @@ jQuery(function($){
 			'<div id="pageViewStngs" style="padding:20px;">'+
 			'<h2>'+i18n[sSettings.lang].stngSearch+'</h2>'+
 			'<hr>'+
+			''+i18n[sSettings.lang].lang+': '+
+			'<select>'+
+			'<option value="ru">Русский</option>'+
+			'<option value="en">English</option>'+
+			'</select>'+
+			'<br>'+'<br>'+
 			''+i18n[sSettings.lang].helpingView+': '+
 			'<input type="radio" name="helpingsite" value="yes"> '+i18n[sSettings.lang].yes+
 			'<input type="radio" name="helpingsite" value="no"> '+i18n[sSettings.lang].no+
@@ -579,11 +592,17 @@ jQuery(function($){
 			'<input id="stM" type="checkbox" name="first5" /> '+i18n[sSettings.lang].map+'<br>'+
 			'<br>'+'<br>'+
 			''+i18n[sSettings.lang].urlImgBack+': <br>'+
-			'<input type="text" id="urlPhonsImg" size="40" disabled style="background-color:#999;">'+
+			'<input type="text" id="urlPhonsImg" size="40" style="width:100%;">'+
 			'<br>'+'<br>'+
 			'<button id="saveSettings">'+i18n[sSettings.lang].save+'</button>'+
 			'</div>'
 		);
+
+		if(sSettings.lang=='ru') {
+			$('#pageViewStngs select option[value=' + 'ru' + ']').attr('selected', 'selected');
+		} else if(sSettings.lang=='en') {
+			$('#pageViewStngs select option[value=' + 'en' + ']').attr('selected', 'selected');
+		}
 		
 		if(sSettings.vHelp=='yes') {
 			$('#pageViewStngs input:radio[name="helpingsite"][value=' + 'yes' + ']').attr('checked', 'checked');
@@ -613,6 +632,12 @@ jQuery(function($){
 		}
 		
 		$('#saveSettings').click(function(){
+			var selectLang=$('#pageViewStngs select option:selected').val();
+			if(selectLang=='ru') {
+				sSettings.lang='ru';
+			} else if(selectLang=='en') {
+				sSettings.lang='en';
+			}
 			var radioHelp=$('#pageViewStngs input:radio[name="helpingsite"]:checked');
 			for(var i=0; i<radioHelp.length;i++) {
 				var typeHlp=radioHelp[i].value;
@@ -654,10 +679,8 @@ jQuery(function($){
 				if(idCh=='stV') {sSettings.searchType.video=true;}
 				if(idCh=='stM') {sSettings.searchType.map=true;}
 			}
+			sSettings.urlBckgrndImg=$('#urlPhonsImg').val();
 			
-			if($('#urlPhonsImg').val().length>0) {
-				sSettings.urlBckgrndImg=$('#urlPhonsImg').val();
-			}
 			$.cookie('vhSettings',JSON.stringify(sSettings));
 			window.location.reload();
 		});
@@ -667,13 +690,19 @@ jQuery(function($){
 	var btnPrivacy = $('<li>');
 	btnPrivacy.html('<i class="icon-book"></i> '+i18n[sSettings.lang].terms);
 	btnPrivacy.click(function(){
-		showModalWin('СКОРО....');
+		var txtPrivacy=jQuery.ajax({
+            url: './LICENSE',
+            async: false
+        }).responseText;
+        txtPrivacy=txtPrivacy.replace(/\n/gi, '<br>');
+		showModalWin(txtPrivacy);
 	});
 	btnPrivacy.appendTo($('.nav-list-button'));
 
 	
 
 	setInterval(function(){
+		if(sSettings.vHelp=='yes') {
 		if(!viewTypeData & !helpViewUsr) {
 			timerHelpUsr++;
 
@@ -738,6 +767,7 @@ jQuery(function($){
 				timerHelpUsr++;
 			}
 		}*/
+		}
 	}, 1000); // 1sec
 
 	setTimeout(function(){
@@ -1006,6 +1036,10 @@ jQuery(function($){
 		}
 	}
 
+	if(sSettings.urlBckgrndImg!='') {
+		//$('#backgroundfont').backstretch("http://dl.dropbox.com/u/515046/www/garfield-interior.jpg");
+		$('#backgroundfont2').backstretch(sSettings.urlBckgrndImg);
+	}
 
 }());
 });

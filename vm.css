@@ -36,17 +36,28 @@ h1 small {
 }
 
 #backgroundfont {
-  background: #1f1f1f;
   height: 100%;
   width: 100%;
-  z-index: 5;
   position: absolute;
   top: 0;
   left: 0;
 }
+#backgroundfont1 {
+  background: #1f1f1f;
+  z-index: 4;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
 
-#backgroundfont.light {
+#backgroundfont1.light {
   background: #f1f1f1;
+}
+
+#backgroundfont2 {
+  z-index: 5;
+  height: 100%;
+  width: 100%;
 }
 
 .container { 
@@ -282,6 +293,7 @@ h2.help_right small {
   overflow-y: auto;
   background: #333;
   width: 300px;
+  display: block;
 }
 
 #nav-button {
