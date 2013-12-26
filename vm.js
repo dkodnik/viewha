@@ -60,7 +60,7 @@ jQuery(function($){
 	/* ==================== START FUNCTIONS ===================== */
 	
 	function playThisAudio(val) {
-    		var txtUrl="http://translate.google.com/translate_tts?ie=utf-8&tl="+lang_def+"&q=";
+    		var txtUrl="http://translate.google.com/translate_tts?ie=utf-8&tl="+sSettings.lang+"&q=";
     		var myAudio = document.getElementById('vmAu');
     		var tuv=txtUrl+"'"+val+"'";
     		console.log('speech='+tuv);
