@@ -60,7 +60,7 @@ jQuery(function($){
 	/* ==================== START FUNCTIONS ===================== */
 	
 	function playThisAudio(val) {
-    		var txtUrl="http://translate.google.com/translate_tts?ie=utf-8&tl=ru&q=";
+    		var txtUrl="http://translate.google.com/translate_tts?ie=utf-8&tl="+lang_def+"&q=";
     		var myAudio = document.getElementById('vmAu');
     		myAudio.setAttribute('src',  txtUrl+val );
     		myAudio.setAttribute('preload', 'auto');
@@ -355,7 +355,7 @@ jQuery(function($){
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
-					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="icon-volume-up"></i>','</div>',
+					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchSpeechText+'</font>','">','<i class="icon-volume-up"></i>','</div>',
 					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
@@ -375,7 +375,7 @@ jQuery(function($){
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.visibleUrl,'</a>',
-					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="icon-volume-up"></i>','</div>',
+					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchSpeechText+'</font>','">','<i class="icon-volume-up"></i>','</div>',
 					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
@@ -407,7 +407,7 @@ jQuery(function($){
 					'<h2>',r.videoType,'</h2>',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.publisher,'</a>',
-					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="icon-volume-up"></i>','</div>',
+					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchSpeechText+'</font>','">','<i class="icon-volume-up"></i>','</div>',
 					'<div class="srcThisSite" gourl="',r.publisher,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
@@ -428,7 +428,7 @@ jQuery(function($){
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.publisher,'</a>',
-					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="icon-volume-up"></i>','</div>',
+					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchSpeechText+'</font>','">','<i class="icon-volume-up"></i>','</div>',
 					'<div class="srcThisSite" gourl="',hostU,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
