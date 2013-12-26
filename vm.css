@@ -663,6 +663,7 @@ h2.help_right small {
 }
 .speechThisSite {
   font-size: 22px;
+  right: 50px;
 }
 
 .srcThisSite:hover, .speechThisSite:hover {
