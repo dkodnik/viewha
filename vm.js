@@ -62,7 +62,7 @@ jQuery(function($){
 	function playThisAudio(val) {
     		var txtUrl="http://translate.google.com/translate_tts?ie=utf-8&tl="+lang_def+"&q=";
     		var myAudio = document.getElementById('vmAu');
-    		var tuv=txtUrl+val;
+    		var tuv=txtUrl+"'"+val+"'";
     		console.log('speech='+tuv);
     		myAudio.setAttribute('src', tuv);
     		myAudio.setAttribute('preload', 'auto');
@@ -217,6 +217,7 @@ jQuery(function($){
 		// URL of Google's AJAX search API
 		var apiURL = 'http://ajax.googleapis.com/ajax/services/search/'+typeGglQ[istpGQ]+'?v=1.0&callback=?';
 		var resultsDiv = $('#resultsDiv');
+		var playSpeechTrue=false;
 		
 		$.getJSON(apiURL,{q:settings.term,rsz:settings.perPage,start:settings.page*settings.perPage},function(r){
 			
@@ -268,6 +269,7 @@ jQuery(function($){
 					return false;
 				});
 				$('.webResult').find('.speechThisSite').on('click',function(){
+					playSpeechTrue=true;
 					var el = $(this);
 					var spchTxt=el.attr('spchtxt');
 					console.log("spchTxt="+spchTxt);
@@ -282,7 +284,11 @@ jQuery(function($){
 				$('.webResult').off(); // удаляем все заранее установленные обработчики событий
 				$('.webResult').on('click',function(){
 					var el = $(this);
-					window.open(el.attr('gourl'),'_blank'); 
+					if(!playSpeechTrue) {
+						window.open(el.attr('gourl'),'_blank'); 
+					} else {
+						playSpeechTrue=false;
+					}
 					return false;
 				});
 
