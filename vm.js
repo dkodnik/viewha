@@ -272,7 +272,7 @@ jQuery(function($){
 					var spchTxt=el.attr('spchtxt');
 					console.log("spchTxt="+spchTxt);
 					playThisAudio(spchTxt);
-					//return false;
+					return false;
 				});
 
 				$('.webResult').find('.srcThisSite').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
@@ -291,8 +291,8 @@ jQuery(function($){
 					if(settings.siteURL==''){
 						// только для всех сайтов, а не определенного
 						el.find('.srcThisSite').css('display','block');
-						el.find('.speechThisSite').css('display','block');
 					}
+					el.find('.speechThisSite').css('display','block');
 					// zoomer - on					
 					var idST=setTimeout(function(){
 						el.css('z-index','20');
