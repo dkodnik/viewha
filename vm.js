@@ -62,7 +62,9 @@ jQuery(function($){
 	function playThisAudio(val) {
     		var txtUrl="http://translate.google.com/translate_tts?ie=utf-8&tl="+lang_def+"&q=";
     		var myAudio = document.getElementById('vmAu');
-    		myAudio.setAttribute('src',  txtUrl+val );
+    		var tuv=txtUrl+val;
+    		console.log('speech='+tuv);
+    		myAudio.setAttribute('src', tuv);
     		myAudio.setAttribute('preload', 'auto');
     		myAudio.play();
 	}
