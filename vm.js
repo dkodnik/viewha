@@ -270,8 +270,9 @@ jQuery(function($){
 				$('.webResult').find('.speechThisSite').on('click',function(){
 					var el = $(this);
 					var spchTxt=el.attr('spchtxt');
+					console.log("spchTxt="+spchTxt);
 					playThisAudio(spchTxt);
-					return false;
+					//return false;
 				});
 
 				$('.webResult').find('.srcThisSite').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
