@@ -220,6 +220,9 @@ h2.help_right small {
 .pageContainer.reSline .webResult .infSrc .srcThisSite, .pageContainer.reSline .webResultMap .infSrc .srcThisSite {
   right: 210px;
 }
+.pageContainer.reSline .webResult .infSrc .speechThisSite, .pageContainer.reSline .webResultMap .infSrc .speechThisSite {
+  right: 250px;
+}
 
 .pageContainer.reSline .cntnt.zoom {
   margin-top: -25%;
@@ -246,6 +249,9 @@ h2.help_right small {
 .pageContainer.reSline .cntnt.zoom .infSrc .markerResSrc,
 .pageContainer.reSline .cntnt.zoom .infSrc .srcThisSite {
   right: 10px;
+}
+.pageContainer.reSline .cntnt.zoom .infSrc .speechThisSite {
+  right: 50px;
 }
 
 
@@ -627,7 +633,7 @@ h2.help_right small {
   opacity: 0.3;
 }
 
-.srcThisSite {
+.srcThisSite, .speechThisSite {
   display: none;
   margin: 0;
   color: #fff;
@@ -655,8 +661,11 @@ h2.help_right small {
   height: 23px;
   text-align: center;
 }
+.speechThisSite {
+  font-size: 22px;
+}
 
-.srcThisSite:hover {
+.srcThisSite:hover, .speechThisSite:hover {
   color: #fff;
   background-color: #006dcc;
   *background-color: #0044cc;
