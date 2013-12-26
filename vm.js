@@ -255,6 +255,7 @@ jQuery(function($){
 				cursor = r.responseData.cursor;
 
 				$('.webResult').find('.srcThisSite').off(); // удаляем все заранее установленные обработчики событий
+				$('.webResult').find('.speechThisSite').off(); // удаляем все заранее установленные обработчики событий
 				$('.webResult').find('.srcThisSite').on('click',function(){
 					var el = $(this);
 					//el.tipsy({live:true,html:true, gravity:'se', delayIn:700, delayOut:200});
@@ -264,8 +265,15 @@ jQuery(function($){
 					goSearch({siteURL:goSiteUrl});
 					return false;
 				});
+				$('.webResult').find('.speechThisSite').on('click',function(){
+					var el = $(this);
+					var spchTxt=el.attr('spchtxt');
+					playThisAudio(spchTxt);
+					return false;
+				});
 
 				$('.webResult').find('.srcThisSite').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
+				$('.webResult').find('.speechThisSite').tipsy({html:true, gravity:'se', delayIn:700, delayOut:200});
 
 
 				$('.webResult').off(); // удаляем все заранее установленные обработчики событий
@@ -279,7 +287,8 @@ jQuery(function($){
 					var el = $(this);
 					if(settings.siteURL==''){
 						// только для всех сайтов, а не определенного
-						el.find('.srcThisSite').css('display','block'); 
+						el.find('.srcThisSite').css('display','block');
+						el.find('.speechThisSite').css('display','block');
 					}
 					// zoomer - on					
 					var idST=setTimeout(function(){
@@ -298,6 +307,7 @@ jQuery(function($){
 					}
 					
 					el.find('.srcThisSite').css('display','none');
+					el.find('.speechThisSite').css('display','none');
 				});
 			
 			} else {
@@ -345,7 +355,7 @@ jQuery(function($){
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.visibleUrl,'</a>',
-					'<div class="srcThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="fa fa-volume-up"></i>','</div>',
+					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="icon-volume-up"></i>','</div>',
 					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
@@ -365,7 +375,7 @@ jQuery(function($){
 					'<img src="http://',r.visibleUrl,'/favicon.ico" class="ico">',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.visibleUrl,'</a>',
-					'<div class="srcThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="fa fa-volume-up"></i>','</div>',
+					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="icon-volume-up"></i>','</div>',
 					'<div class="srcThisSite" gourl="',r.visibleUrl,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
@@ -397,7 +407,7 @@ jQuery(function($){
 					'<h2>',r.videoType,'</h2>',
 					'<p>',r.titleNoFormatting,'</p>',
 					'<a href="',r.originalContextUrl,'" target="_blank">',r.publisher,'</a>',
-					'<div class="srcThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="fa fa-volume-up"></i>','</div>',
+					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="icon-volume-up"></i>','</div>',
 					'<div class="srcThisSite" gourl="',r.publisher,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
@@ -418,7 +428,7 @@ jQuery(function($){
 					'<h2><a href="',r.unescapedUrl,'" target="_blank">',r.title,'</a></h2>',
 					'<p>',r.content,'</p>',
 					'<a href="',r.unescapedUrl,'" target="_blank">',r.publisher,'</a>',
-					'<div class="srcThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="fa fa-volume-up"></i>','</div>',
+					'<div class="speechThisSite" spchtxt="',r.title,'" original-title="',i18n[sSettings.lang].searchSpeechText,'">','<i class="icon-volume-up"></i>','</div>',
 					'<div class="srcThisSite" gourl="',hostU,'" original-title="','<font class=\'fs15\'>'+i18n[sSettings.lang].searchThisSiteM+'</font>','">','&#8250;','</div>',
 					'</div>',
 					'</div>',
